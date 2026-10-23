@@ -1,54 +1,44 @@
 # Browser Notes
 
-프레임워크 너머, 브라우저 가까이. 브라우저의 설계 선택을 질문하고 실험하는 개인 연구 공간의 초기 디자인·구조.
+> 프레임워크 너머, 브라우저 가까이.
 
-## 실행
+**https://browser-notes-alpha.vercel.app**
 
-```sh
-cd ~/Study/browser-notes
-pnpm install --frozen-lockfile
-pnpm dev
-```
+![Browser Notes 대표 화면](docs/images/home.png)
 
-로컬 주소: http://127.0.0.1:3100
+## 왜 시작했나
 
-```sh
-pnpm build
-pnpm typecheck
-pnpm start
-```
+AI와 함께 일하면서 코드를 쓰는 일은 확실히 쉬워졌습니다. 만들고 싶은 것을 설명하면 금방 동작하는 코드가 나오고, 처음 보는 라이브러리도 짧은 시간 안에 손에 익습니다. 생산성은 분명히 올라갔습니다.
 
-Node.js 20.9 이상과 pnpm 9.15.4가 필요하다. 이 프로젝트는 Node 22.14.0으로 확인했다. 설치 버전은 package.json과 pnpm-lock.yaml에 고정했다. Next.js 16.4.2 / React 19.3.1 / TypeScript 7.0.2 / App Router / CSS Custom Properties.
+그런데 만드는 속도가 빨라질수록 한 가지가 더 또렷해졌습니다. 그 사이에도 웹은 계속 움직이고 있다는 것입니다. 브라우저에는 새로운 API가 들어오고, 리소스를 가져오는 방식과 화면을 그리는 방식이 조금씩 바뀝니다. 프레임워크의 새 기능도 들여다보면 결국 브라우저가 새로 할 수 있게 된 일을 감싼 경우가 많습니다. 도구는 바뀌어도 그 아래에서 일하는 것은 언제나 브라우저입니다.
 
-## 먼저 볼 파일
+그래서 프레임워크의 사용법을 따라가기보다, 브라우저 자체의 흐름에 조금 더 집중해 보려고 합니다.
 
-- `docs/design-direction.md`: 레퍼런스, 카테고리 기준, 화면 구성, 글의 관점.
-- `docs/design-system.md`: 토큰, 타이포그래피, 반응형, 접근성 규칙.
-- `docs/writing-template.md`: AI와 탐구 글을 작성할 때 사용하는 틀.
-- `src/styles/tokens.css`: 디자인 토큰의 단일 정의.
-- `docs/authoring.md`: MDX 작성 방법과 메타데이터 규칙.
-- `docs/note-template.mdx`: 복사해서 시작하는 실제 MDX 양식.
-- `src/content/notes/*.mdx`: 각 글의 메타데이터와 본문.
-- `src/lib/notes.ts`: 글 자동 탐색·정렬·로딩.
-- `src/app/notes/[slug]/page.tsx`: 현재 글 상세 템플릿.
-- `src/components/early-hints-demo.tsx`: 개념 실험 컴포넌트.
+- 지금의 브라우저에서 아쉬운 점, 개선됐으면 하는 점은 무엇인지
+- 새로 들어오는 기능은 어떤 문제를 풀기 위해 만들어졌는지
+- 웹 플랫폼은 지금 어느 방향으로 흘러가고 있는지
 
-## 화면
+이런 질문을 꾸준히 관찰하고 기록하면서, 그만큼 쌓인 이해를 제 프로젝트와 회사 프로젝트로 다시 가져가 더 좋은 서비스를 만드는 것이 이 공간의 목표입니다.
 
-`/` 대표 화면 · `/notes` 필터 가능한 노트 · `/notes/early-hints` 탐구 상세 · `/lab` 실험실 · `/about` 작성 원칙 · `/design-system` 토큰 샘플.
+## 무엇을 관찰하나
 
-## 현재 범위와 글 추가
+| 주제 | 질문 |
+| --- | --- |
+| 로딩과 네트워크 | 언제, 무엇을 가져오는가? |
+| 렌더링과 인터랙션 | 어떤 과정으로 보이고 반응하는가? |
+| 웹의 경계 | 브라우저는 어디까지 책임져야 하는가? |
 
-이 버전은 레퍼런스 조사와 디자인 기반을 확인하는 로컬 프로토타입이다. 실제 연구 성과, 작성자 이력, 측정 결과를 꾸며 넣지 않았다. Early Hints는 데모와 직접 작성할 빈 항목을 둔 탐구 노트이며, View Transitions와 Speculation Rules는 질문 노트로 남겨두었다. 실제 측정과 판단은 작성자가 채운다. 이름은 Browser Notes로 확정했으며 About 선언문은 검토할 제안이다.
+지금 펼쳐 둔 질문들입니다.
 
-글은 `src/content/notes/*.mdx`에 추가한다. 파일 안에 제목·설명·주제·상태·태그·작성일·수정일과 본문을 함께 쓰면 홈 목록과 상세 페이지에 자동 반영된다. `<EarlyHintsDemo />` 같은 실험 컴포넌트도 삽입할 수 있다.
+- [HTML을 이미 스트리밍하고 있다면, Early Hints는 어떤 기다림을 더 줄일 수 있을까?](https://browser-notes-alpha.vercel.app/notes/early-hints)
+- [화면 전환의 주인은 누구여야 할까?](https://browser-notes-alpha.vercel.app/notes/view-transitions)
+- [클릭을 예측하는 웹은 어디까지 친절한가?](https://browser-notes-alpha.vercel.app/notes/speculation-budget)
 
-```sh
-cp docs/note-template.mdx src/content/notes/my-question.mdx
-```
+## 기록하는 방식
 
-파일 내용을 수정하고 `/notes/my-question`에서 확인한다. 자세한 규칙은 `docs/authoring.md`에 있다. 배포 환경에는 다시 빌드·배포해야 반영된다. CMS, 온라인 에디터, 자동 AI 글쓰기, 계정, 분석 기능은 구현하지 않았다.
+1. **사용법보다, 존재 이유를.** 새 API를 만나면 그것이 풀려던 문제부터 따라갑니다.
+2. **프레임워크는 하나의 사례로.** 브라우저와 HTTP의 원리를 중심에 두고, 도구가 그 원리를 어떻게 드러내거나 감추는지 비교합니다.
+3. **데모와 증거를 구분하기.** 시뮬레이션은 이해를 돕고, 측정은 주장을 검증합니다. 확인한 환경과 버전을 함께 남깁니다.
+4. **AI와 만들고, 판단은 내가.** AI는 구현과 탐색을 돕는 협업자입니다. 가설을 고르고 근거를 검토하고 결론에 책임지는 일은 제 몫으로 남깁니다.
 
-`pnpm test`로 글 메타데이터 검증 테스트를 실행한다. 이 테스트 명령은 Node.js 22.6 이상이 필요하다.
-
-홈·본문·실험실의 Early Hints 데모는 실제 HTTP 103을 전송하지 않는다. 단순화한 가정에서 순서와 대기를 비교한다. 호스팅 배포는 수행하지 않았다.
+> 빠르게 만드는 시대에, 깊이 이해하는 연습.
