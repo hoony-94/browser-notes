@@ -147,6 +147,9 @@ input[type="range"] { display: block; width: 100%; height: 20px; margin: 8px 0 1
 .page-title { font-size: var(--text-title); letter-spacing: -.06em; line-height: 1.4; margin-top: var(--space-5); }
 .page-title em { color: var(--color-accent); font-style: normal; }
 .page-intro { margin-block: var(--space-5) var(--space-8); color: var(--color-muted); font-size: 15px; }
+.about-story { max-width: 680px; }
+.about-story p + p { margin-top: var(--space-4); }
+.about-story p:last-child { color: var(--color-text); }
 .lab-layout { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-9); align-items: start; }
 .lab-layout h2 { margin-block: var(--space-4); font-family: var(--font-display); font-size: 32px; }
 .lab-layout h3 { margin-top: var(--space-6); }
@@ -253,11 +256,10 @@ blockquote { border-left: 2px solid var(--color-accent); padding-left: var(--spa
   .section-heading h2 { font-size: 24px; }
   .note-row { gap: var(--space-3); padding-block: var(--space-5); }
   .note-row h3 { font-size: 17px; }
-  .manifesto-inner { flex-wrap: wrap; padding-block: var(--space-7); gap: var(--space-5); }
+  .manifesto-inner { display: grid; grid-template-columns: auto 1fr; padding-block: var(--space-7); gap: var(--space-5); }
   .manifesto-symbol { font-size: 60px; }
   .manifesto-inner h2 { font-size: 22px; }
-  .manifesto-inner > div { flex: 1; }
-  .manifesto-inner .text-link { margin-left: 80px; }
+  .manifesto-inner .text-link { grid-column: 2; margin-left: 0; }
   .site-footer { align-items: start; gap: var(--space-5); }
   .footer-brand { font-size: 20px; }
   .footer-links { max-width: 180px; }
@@ -294,7 +296,6 @@ blockquote { border-left: 2px solid var(--color-accent); padding-left: var(--spa
   .section-heading .text-link { margin-top: var(--space-3); }
   .manifesto-symbol { align-self: start; margin-top: 8px; font-size: 42px; }
   .manifesto-inner h2 { font-size: 19px; }
-  .manifesto-inner .text-link { margin-left: 66px; }
   .site-footer { flex-direction: column; }
   .footer-links { justify-content: flex-start; max-width: none; }
   .footer-links > span { text-align: left; }
