@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ReadingProgress } from "@/components/reading-progress";
 import { getNote, getNotes } from "@/lib/notes";
 
 export async function generateStaticParams() {
@@ -45,6 +46,7 @@ export default async function NotePage({ params }: { params: Promise<{ slug: str
           </aside>
         )}
         <article className="prose"><Content /></article>
+        <ReadingProgress />
       </div>
     </main>
   );

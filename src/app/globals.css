@@ -205,6 +205,19 @@ input[type="range"] { display: block; width: 100%; height: 20px; margin: 8px 0 1
 .article-toc { display: flex; flex-direction: column; gap: var(--space-3); position: sticky; top: var(--space-7); height: fit-content; font-size: var(--text-sm); color: var(--color-muted); }
 .article-toc .eyebrow { margin-bottom: var(--space-4); color: var(--color-text); }
 .article-toc a:hover { color: var(--color-accent); }
+/* A pill in the corner by default; a sticky column beside the article when there is room. */
+.reading-progress { position: fixed; right: 16px; bottom: 16px; z-index: 10; display: flex; align-items: center; gap: var(--space-2); padding: 8px 14px; border: 1px solid var(--color-line); border-radius: var(--radius-pill); background: var(--color-bg); box-shadow: 0 4px 16px rgb(37 40 34 / .08); font-size: 12px; color: var(--color-muted); }
+.reading-progress .eyebrow, .reading-progress small { display: none; }
+.reading-progress strong { font-weight: 500; color: var(--color-text); white-space: nowrap; }
+.reading-bar { width: 48px; height: 2px; background: var(--color-line); overflow: hidden; flex-shrink: 0; }
+.reading-bar i { display: block; height: 100%; background: var(--color-accent); transition: width var(--duration-fast) linear; }
+@media (min-width: 1300px) {
+  .article-layout:not(.article-layout-without-toc) { grid-template-columns: 220px minmax(0, var(--reading-max)) 150px; }
+  .article-layout:not(.article-layout-without-toc) .reading-progress { position: sticky; top: var(--space-7); right: auto; bottom: auto; height: fit-content; flex-direction: column; align-items: stretch; gap: var(--space-2); padding: 0; border: 0; border-radius: 0; background: none; box-shadow: none; font-size: var(--text-sm); }
+  .article-layout:not(.article-layout-without-toc) .reading-progress .eyebrow { display: block; margin-bottom: var(--space-2); color: var(--color-text); }
+  .article-layout:not(.article-layout-without-toc) .reading-progress small { display: block; font-family: var(--font-mono); font-size: 10px; }
+  .article-layout:not(.article-layout-without-toc) .reading-bar { width: 100%; }
+}
 .prose > h2:not(:first-child) { margin-top: var(--space-8); padding-top: var(--space-6); border-top: 1px solid var(--color-line); }
 .prose pre { max-width: 100%; overflow-x: auto; padding: var(--space-5); border-radius: var(--radius-sm); background: var(--color-surface); line-height: 1.7; }
 .prose pre code { font-size: var(--text-sm); }
