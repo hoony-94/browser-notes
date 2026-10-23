@@ -90,11 +90,218 @@ HTML 수신 기간은 첫 조각부터 마지막 조각까지의 시간이며 �
 
 ### 실험 환경과 비교 조건
 
-{/* 브라우저·Next.js·런타임 버전, CDN 설정, 캐시·연결 상태와 비교군을 작성합니다. */}
+먼저 1번 질문을 확인했다. 브라우저가 103과 200을 각각 받는지, 그리고 Next.js·런타임·CDN 중 어디에서 힌트를 만들고 보내는지?
+
+| 항목 | 조건 |
+| --- | --- |
+| 브라우저 | Chrome 155. Chrome DevTools Protocol로 기록 |
+| 프레임워크 | Next.js 16.4.2, React 19.3.1. production 빌드 |
+| 런타임 | Node.js 22.14.0 `http` 커스텀 서버. 103은 `res.writeEarlyHints()`로 전송 |
+| CDN 역할 | Node.js `http2`로 만든 로컬 프록시(HTTP/2, TLS). 실제 CDN이 아니라 103을 전달·차단·생성하는 세 가지 동작만 흉내 냄 |
+| 네트워크·캐시 | 로컬 조건은 모두 127.0.0.1. 측정마다 새 브라우저 컨텍스트를 열어 캐시와 연결이 비어 있는 상태에서 시작 |
+
+서버가 HTML을 준비하는 동안의 대기를 만들기 위해, 요청마다 렌더링하면서 첫 화면을 1초 늦게 그리는 실험용 페이지(`/dynamic?delay=1000`)를 만들었다. 비교를 위해 빌드할 때 미리 렌더링해 두는 정적 페이지(`/static`)도 함께 두었고, 두 페이지 모두 같은 CSS 파일 하나를 쓴다.
+
+103에 담을 CSS 경로는 커스텀 서버가 시작할 때, Next.js가 빌드하면서 남긴 경로별 CSS 목록에서 미리 읽어 두었다. React가 렌더링하면서 알려주는 Link는 첫 화면을 그린 뒤에야 나오기 때문에, 200보다 먼저 보내야 하는 103에는 쓸 수 없다.
+
+| 조건 | 런타임 | 프록시 | 페이지 |
+| --- | --- | --- | --- |
+| ① 103 중계 | 103 보냄 | 103 전달 | 동적 |
+| ② 103 버림 | 103 보냄 | 103 버림 | 동적 |
+| ③ 프록시 학습 | 103 안 보냄 (Next.js만 응답) | 이전 200의 Link를 기억했다가 103 생성 | 동적 |
+| ④ 정적 페이지 | 103 보냄 | 103 전달 | 정적 |
+| ⑤ HTTP/1.1 직접 | 103 보냄 | 거치지 않음 | 동적 |
+
+조건마다 5번씩 측정했다. 브라우저 쪽에서는 Chrome이 103을 Early Hints로 처리했는지(`Network.responseReceivedEarlyHints`), 103과 200의 도착 시각(`firstInterimResponseStart`, `finalResponseHeadersStart`), CSS 응답이 103에서 왔는지(`fromEarlyHints`)를 기록했다. 프록시 쪽에서는 요청 도착, 103, 200 헤더, 응답 완료 시각을 남겼다.
+
+103으로 미리 받은 CSS는 브라우저가 캐시에서 꺼내 쓰기 때문에, 브라우저 기록에는 CSS를 네트워크에서 실제로 받은 시각이 남지 않는다. 그래서 CSS 요청 시각은 프록시 로그로 확인했다.
+
+<div className="small-copy">
+
+- `Network.responseReceivedEarlyHints`: Chrome이 103을 Early Hints로 받아들였을 때 DevTools에 보내는 이벤트다. DevTools 화면에서는 문서 요청의 Headers 탭에 Early hints headers로 나타난다. [Chrome DevTools Protocol ↗](https://chromedevtools.github.io/devtools-protocol/tot/Network/#event-responseReceivedEarlyHints)
+- `firstInterimResponseStart`: 페이지 이동을 시작한 뒤 첫 중간 응답(1xx, 여기서는 103)의 첫 바이트가 도착한 시각이다. 중간 응답이 없으면 0이다. [MDN ↗](https://developer.mozilla.org/en-US/docs/Web/API/PerformanceResourceTiming/firstInterimResponseStart)
+- `finalResponseHeadersStart`: 최종 응답(200)의 헤더가 도착하기 시작한 시각이다. 두 시각 모두 Console에서 `performance.getEntriesByType("navigation")[0]`으로 볼 수 있다. [MDN ↗](https://developer.mozilla.org/en-US/docs/Web/API/PerformanceResourceTiming/finalResponseHeadersStart)
+- `fromEarlyHints`: 응답이 103 때 미리 받아 둔 것에서 나왔는지를 나타내는 값이다. DevTools 화면에서는 Initiator `Early-hints`, Size `(disk cache)`로 보인다. [Chrome DevTools Protocol ↗](https://chromedevtools.github.io/devtools-protocol/tot/Network/#type-Response) · [Chrome Early Hints ↗](https://developer.chrome.com/docs/web-platform/early-hints)
+
+</div>
+
+#### 2~4번 질문의 추가 조건
+
+2~4번 질문은 같은 런타임·프록시·Chrome으로 측정하되, 103의 효과가 화면 표시까지 이어지는지 보기 위해 조건을 바꿨다. 103은 모두 프록시를 거쳐 HTTP/2로 전달했다.
+
+| 항목 | 조건 |
+| --- | --- |
+| 느린 네트워크 흉내 | 프록시가 CSS를 초당 322 KB로만 내보내게 했다. CSS 파일(약 129 KB)을 혼자 받으면 약 400 ms가 걸리고, CSS 두 개를 동시에 받으면 대역폭을 나눠 쓴다. HTML과 JS는 제한하지 않았다 |
+| 페이지 | 첫 화면을 그리기 전에 서버가 기다리는 페이지(대기 0·100·300·600·1,000 ms)와, 첫 화면은 바로 보내고 본문만 1,000 ms 뒤에 스트리밍하는 페이지 |
+| 103에 담는 내용 | 없음(OFF), 쓰는 CSS(ON), 쓰지 않는 CSS만(틀린 힌트), 쓰지 않는 CSS와 쓰는 CSS 함께(둘 다) |
+| 캐시 | 기본은 매번 빈 캐시. 캐시 조건에서는 같은 페이지를 한 번 열어 CSS를 캐시에 넣은 뒤 다시 측정 |
+| 반복 | 조건마다 10번 |
+
+같은 컴퓨터 안에서는 CSS가 몇 ms 만에 받아져서 화면 표시 차이가 드러나지 않기 때문에 대역폭을 제한했다. 400 ms는 앞의 개념 모델이 가정한 CSS 수신 기간과 같은 값이다. 실제 네트워크의 왕복 지연이나 HTTP/2 우선순위, JS와의 경쟁은 반영하지 않은 단순한 흉내다.
+
+LCP(Largest Contentful Paint)는 페이지에서 가장 큰 콘텐츠가 화면에 그려진 시각으로, 브라우저의 `largest-contentful-paint` 기록에서 읽었다. 실험 페이지의 LCP는 제목(`h1`)이고, CSS가 도착해야 그려진다.
 
 ### 관찰한 결과
 
-{/* 반복 측정한 결과와 원본 로그·트레이스·재현 방법을 작성합니다. */}
+| 조건 | 프로토콜 | 103 사용 | 103에 Link | CSS를 103으로 받음 | 103 도착 | 200 도착 |
+| --- | --- | --- | --- | --- | --- | --- |
+| ① 103 중계 | h2 | 5/5 | 5/5 | 5/5 | 2 ms | 1,010 ms |
+| ② 103 버림 | h2 | 0/5 | — | 0/5 | — | 1,006 ms |
+| ③ 프록시 학습 | h2 | 4/5 | 4/5 | 4/5 | 2.5 ms | 1,013 ms |
+| ④ 정적 페이지 | h2 | 5/5 | 5/5 | 5/5 | 2 ms | 5 ms |
+| ⑤ HTTP/1.1 직접 | http/1.1 | 0/5 | — | 0/5 | 1 ms | 1,008 ms |
+
+<p className="small-copy">103 사용은 Chrome이 103을 Early Hints로 처리한 횟수이고, 103에 Link는 그중 Link가 담겨 있던 횟수다. 103 도착은 처리 여부와 관계없이 103이 도착한 시각이다. 도착 시각은 브라우저의 Navigation Timing 기준 중앙값이다. ③의 4/5는 2~5회째 요청이다. 아래 curl 기록의 시각은 ms까지만 남겼다.</p>
+
+#### 1. Next.js만으로는 103이 없었다
+
+커스텀 서버의 103을 끄고 Next.js만 응답하게 하면, 동적 페이지는 200에만 Link가 있었고 정적 페이지는 Link도 없었다. 이 Link는 React가 렌더링하면서 발견한 CSS라서 200과 같은 순간에 나온다.
+
+```
+# 동적 페이지
+14:34:18.458 > GET /dynamic?delay=1000 HTTP/1.1
+14:34:19.480 < HTTP/1.1 200 OK
+14:34:19.480 < Link: </_next/static/chunks/11jpq2l3uwkyz.css>; rel=preload; as="style"
+
+# 정적 페이지
+14:39:31.241 > GET /static HTTP/1.1
+14:39:31.244 < HTTP/1.1 200 OK
+```
+
+Next.js 팀은 완전히 정적인 페이지에는 Link 헤더의 시간 이득이 없어 production에서는 넣지 않는다고 설명했다(PPR를 켜면 넣는다). [GitHub 토론 ↗](https://github.com/vercel/next.js/discussions/76995) 정적 페이지는 빌드할 때 HTML을 미리 만들어 두기 때문에 응답 헤더 바로 뒤에 HTML이 따라오고, CSS를 가리키는 `<link>` 태그도 HTML 맨 앞에 있다. 헤더로 한 번 더 알려 줘도 CSS를 발견하는 시점이 거의 같아서 그런 것 같다.
+
+#### 2. 런타임이 보낸 103은 HTTP/2로 전달될 때만 Chrome이 사용했다
+
+런타임이 Next.js에 요청을 넘기기 전에 103을 쓰면, 103이 200보다 약 1초 먼저 도착했다. 103의 Link(`as=style`)는 커스텀 서버가 쓴 값이고, 200의 Link(`as="style"`)는 React가 쓴 값이다. 같은 CSS를 가리키지만 만든 곳이 다르다.
+
+```
+14:33:53.851 > GET /dynamic?delay=1000 HTTP/2
+14:33:53.853 < HTTP/2 103
+14:33:53.853 < link: </_next/static/chunks/11jpq2l3uwkyz.css>; rel=preload; as=style
+14:33:54.861 < HTTP/2 200
+14:33:54.861 < link: </_next/static/chunks/11jpq2l3uwkyz.css>; rel=preload; as="style"
+```
+
+Chrome은 ①에서 5번 모두 103을 받았고, 103 때 받아 둔 CSS를 재사용했다. DevTools에서는 이 CSS의 Initiator가 `Early-hints`, Size가 `(disk cache)`로 보인다. 문서의 Headers 탭에는 200의 Response headers와 별도로 Early hints headers가 나온다.
+
+<figure className="note-figure">
+  <img src="/notes/early-hints/devtools-pass.png" alt="Chrome DevTools Network 패널. dynamic?delay=1000 문서는 1.03초, 11jpq2l3uwkyz.css는 Initiator가 Early-hints이고 Size가 disk cache, 시간이 0 ms다." width="1640" height="768" />
+  <figcaption>① 103 중계. CSS의 Initiator가 Early-hints다. JS 파일들은 HTML을 받은 뒤 문서가 요청했다.</figcaption>
+</figure>
+
+<figure className="note-figure">
+  <img src="/notes/early-hints/devtools-pass-headers.png" alt="같은 요청의 Headers 탭. Early hints headers에 Link 헤더가 있고, 아래 Response headers에도 같은 CSS를 가리키는 Link가 있다." width="1640" height="1344" />
+  <figcaption>같은 요청의 Headers 탭. 위쪽 Early hints headers가 103이고, 아래쪽 Response headers의 Link가 200이다.</figcaption>
+</figure>
+
+반면 프록시 없이 HTTP/1.1로 연결한 ⑤에서는, 103이 1~2 ms에 도착한 기록(`firstInterimResponseStart`)은 남았지만 Chrome은 이를 Early Hints로 처리하지 않았다. CSS는 200을 받은 뒤에야 요청했다. Chrome이 HTTP/1.1의 103을 사용하지 않는다는 문서 내용과 같다.
+
+#### 3. 103을 받으면 CSS 다운로드가 200보다 먼저 끝났다
+
+<EarlyHintsMeasurement />
+
+프록시 로그로 보면 ①에서는 문서 요청 후 3.4 ms에 CSS 요청이 들어와 6.8 ms에 다 보냈고, 200 헤더는 1,008 ms에 나갔다. ②에서는 CSS 요청이 200 이후인 1,010.6 ms에 들어왔다.
+
+DevTools 화면만 보면 ①의 CSS는 약 1.03초에 0 ms로 처리된 것처럼 보인다. 이는 문서가 캐시에서 CSS를 꺼내 쓴 시점이다. 네트워크에서 실제로 받은 시점은 프록시 로그에서만 확인됐다.
+
+같은 컴퓨터 안의 측정이라 CSS 전송은 몇 ms 만에 끝났다. 앞당긴 시간이 실제 화면 표시로 얼마나 이어지는지는 2번 질문에서 확인한다.
+
+#### 4. 중간 계층이 103을 버리면 브라우저에는 흔적이 남지 않았다
+
+②에서 런타임은 매번 103을 보냈고 프록시 로그에도 `103 dropped`가 남았다. 하지만 브라우저에는 103 수신 기록이 없었고, CSS는 200을 받은 뒤 일반 요청으로 받았다. 브라우저 기록만으로는 "103을 보내지 않았다"와 "중간에 버려졌다"를 구분할 수 없다.
+
+<figure className="note-figure">
+  <img src="/notes/early-hints/devtools-drop.png" alt="Chrome DevTools Network 패널. 11jpq2l3uwkyz.css의 Initiator가 Other, Size가 0.3 kB, 시간이 6 ms다." width="1640" height="768" />
+  <figcaption>② 103 버림. CSS의 Initiator가 Other이고 Size에 실제 전송량(0.3 kB)이 나온다. 200의 Link 헤더로 시작한 요청으로 보인다.</figcaption>
+</figure>
+
+#### 5. 프록시가 200의 Link를 기억하면, Next.js만으로도 두 번째 요청부터 103이 생겼다
+
+③에서 런타임은 103을 보내지 않았다. 1회째에는 103이 없었고, 프록시가 그 200의 Link를 기억한 뒤인 2~5회째에는 프록시가 직접 103을 보냈다. 이때 103의 Link는 `as="style"`로, React가 200에 쓴 값을 그대로 옮긴 것이다. 무엇을 알려줄지는 Next.js가, 언제 보낼지는 프록시가 정한 셈이다.
+
+이 프록시는 Cloudflare 문서에 설명된 동작을 흉내 낸 것이고, 실제 Cloudflare로는 확인하지 않았다. 또 이 방식은 200에 Link가 있어야 동작하므로, Link가 없는 정적 페이지에는 기억할 정보가 없다.
+
+#### 6. 정적 페이지에서는 103과 200 사이가 거의 없었다
+
+④에서 103은 2 ms, 200은 5 ms에 도착했다(프록시 기준으로는 103이 0.8 ms, 200이 2.6 ms). 서버가 기다릴 일이 없으니 103이 먼저 갈 여유도 거의 없다.
+
+#### 참고: 배포된 이 페이지(Vercel)
+
+통제된 비교는 아니지만 배포된 이 노트 페이지도 확인했다. Vercel은 HTTP/2로 응답하며 103을 보냈지만, 103에는 `server`와 `x-vercel-id`만 있고 Link가 없어 미리 받은 리소스는 없었다. curl로는 `Sec-Fetch-Mode: navigate`를 붙였을 때만 103이 보였으므로, 브라우저와 같은 헤더 없이 확인하면 103이 없다고 잘못 판단할 수 있다.
+
+#### 1번 질문에 대한 답
+
+- **브라우저가 받는가**: 103이 HTTP/2로 끝까지 전달되면 Chrome은 103과 200을 각각 받았고, 103의 Link로 CSS를 미리 받았다. HTTP/1.1이거나 중간 계층이 버리면 사용하지 않았다.
+- **어디서 만들고 보내는가**: 이 실험에서 Next.js는 103을 보내지 않았다. 103에 담을 내용은 Next.js의 빌드 결과나 200의 Link에서 나왔고, 실제로 보낸 곳은 런타임(커스텀 서버)이나 CDN 역할의 프록시였다.
+
+결국 같은 페이지라도 어느 계층에서 관찰하느냐에 따라 "103이 있다"는 답이 달라졌다. 최종 응답의 Link만 보고 103 전송 여부를 판단할 수 없다는 처음의 전제를 실제로 확인했다.
+
+### 2번 질문: 103만 바꾸면 CSS 요청과 LCP는 얼마나 달라지나
+
+서버가 첫 화면 전에 1,000 ms를 기다리는 페이지에서 103만 켜고 껐다.
+
+| | 103 OFF | 103 ON | 차이 |
+| --- | --- | --- | --- |
+| CSS 요청 시작 (프록시) | 1,014 ms | 3.6 ms | 약 1,011 ms 앞당김 |
+| CSS 수신 완료 (프록시) | 1,427 ms | 414 ms | 약 1,012 ms 앞당김 |
+| 200 도착 (브라우저) | 1,008 ms | 1,007 ms | 같음 |
+| LCP (브라우저) | 1,448 ms | 1,040 ms | **408 ms 빨라짐** |
+
+<EarlyHintsLcpTimeline />
+
+CSS 요청은 약 1초 앞당겨졌지만 LCP는 408 ms만 빨라졌다. 103 OFF에서는 200이 온 뒤 CSS를 400 ms 넘게 받고 나서야 제목을 그렸다. 103 ON에서는 서버가 기다리는 동안 CSS를 다 받아 두었기 때문에 HTML이 도착하자마자 그렸다. 줄어든 시간은 CSS를 받는 데 걸린 시간만큼이었고, 그보다 더 줄지는 않았다. HTML 자체가 1,000 ms 뒤에야 오기 때문이다.
+
+**답**: 103만 켜도 CSS 요청은 서버 대기만큼(약 1초) 앞당겨졌지만, LCP는 CSS 수신 시간만큼(408 ms) 줄었다.
+
+### 3번 질문: 서버 대기 시간에 따라 차이는 어떻게 바뀌나
+
+같은 조건에서 첫 화면 전 대기 시간만 바꿨다. 마지막 줄은 첫 화면을 바로 보내고 본문만 1,000 ms 뒤에 스트리밍한 페이지다.
+
+<EarlyHintsWaitChart />
+
+| 첫 화면 전 대기 | 200 도착 | LCP (103 OFF) | LCP (103 ON) | 빨라진 시간 |
+| --- | --- | --- | --- | --- |
+| 0 ms | 7 ms | 446 ms | 438 ms | 8 ms |
+| 100 ms | 107 ms | 546 ms | 442 ms | 104 ms |
+| 300 ms | 307 ms | 748 ms | 432 ms | 316 ms |
+| 600 ms | 609 ms | 1,050 ms | 644 ms | 406 ms |
+| 1,000 ms | 1,008 ms | 1,448 ms | 1,040 ms | 408 ms |
+| 스트리밍 (본문 1,000 ms) | 6 ms | 1,024 ms | 1,024 ms | 0 ms |
+
+빨라진 시간은 서버 대기 시간과 함께 늘다가, CSS를 받는 데 걸리는 시간(약 410 ms) 근처에서 멈췄다.
+
+- 대기가 CSS 수신 시간보다 짧으면(0~300 ms) 대기 시간만큼 줄었다. 이때 103 ON의 LCP는 대기와 상관없이 약 430~440 ms로, CSS 수신이 끝나는 시점에 맞춰졌다.
+- 대기가 CSS 수신 시간보다 길면(600, 1,000 ms) 약 400 ms에서 더 늘지 않았다. 이때 103 ON의 LCP는 HTML이 도착하는 시점에 맞춰졌다.
+- 첫 화면을 바로 보내는 스트리밍 페이지에서는 차이가 없었다. 200과 `<link>`가 6 ms에 도착해 103 없이도 CSS를 거의 바로 요청했고, LCP는 1,000 ms 뒤에 오는 본문이 결정했다.
+
+**답**: 줄어드는 시간은 "서버가 첫 화면 전에 기다린 시간"과 "CSS를 받는 시간" 중 짧은 쪽이었다. 첫 화면을 바로 보내는 스트리밍에서는 줄일 시간이 없었다.
+
+### 4번 질문: 힌트가 틀리거나 캐시가 있으면
+
+103에 이 페이지가 쓰지 않는 CSS(약 132 KB)를 담은 경우를 비교했다. 아래 차트는 첫 화면 전 대기가 300 ms인 경우다.
+
+<EarlyHintsWrongHintTimeline />
+
+| 첫 화면 전 대기 | 103 OFF | 맞는 힌트 | 틀린 힌트 | 둘 다 |
+| --- | --- | --- | --- | --- |
+| 300 ms | 748 ms | 432 ms | 856 ms | 838 ms |
+| 1,000 ms | 1,448 ms | 1,040 ms | 1,458 ms | 1,048 ms |
+
+<p className="small-copy">LCP 중앙값. "둘 다"는 쓰지 않는 CSS와 쓰는 CSS를 함께 103에 담은 경우다.</p>
+
+- Chrome은 틀린 힌트도 그대로 따라 쓰지 않는 CSS 132 KB를 매번 다운로드했고, 매번 Console에 경고를 남겼다.
+- 대기가 300 ms일 때 틀린 힌트만 보내면, 그 다운로드가 끝나기 전에 진짜 CSS 요청이 시작돼 대역폭을 나눠 썼다. 진짜 CSS 수신이 약 105 ms 늦어져 LCP가 힌트가 없을 때보다 108 ms 늦었다.
+- "둘 다"는 두 파일이 처음부터 대역폭을 나눠 쓰는 바람에 진짜 CSS가 814 ms에야 끝났다. 맞는 힌트만 보낼 때보다 406 ms, 힌트가 없을 때보다도 90 ms 늦었다.
+- 대기가 1,000 ms면 쓰지 않는 CSS 다운로드가 서버 대기 중에 끝나 LCP에는 거의 영향이 없었다(틀린 힌트 +10 ms, 둘 다 +8 ms). 대신 132 KB를 매번 헛되이 받았다.
+
+<figure className="note-figure">
+  <img src="/notes/early-hints/devtools-console-unused.png" alt="Chrome DevTools Console 경고. unused.css가 Early Hints의 link preload로 미리 받아졌지만 load 이벤트 후 몇 초 안에 쓰이지 않았다는 내용이다." width="1640" height="256" />
+  <figcaption>틀린 힌트를 받은 페이지의 Console. "preloaded using link preload in Early Hints but not used within a few seconds" 경고가 남는다.</figcaption>
+</figure>
+
+CSS를 이미 캐시에 넣어 둔 상태에서는 103 ON과 OFF 모두 CSS를 네트워크로 다시 받지 않았다(프록시에 CSS 요청 없음). LCP도 1,030 ms와 1,028 ms로 같았다. 103은 왔지만 미리 받을 것이 없어서 이득도 비용도 없었다.
+
+**답**: 틀린 힌트는 쓰지 않는 다운로드만큼 대역폭을 빼앗아, 서버 대기가 짧을 때는 103이 없을 때보다 LCP를 늦췄다. 대기가 길면 화면에는 영향이 거의 없었지만 다운로드 비용은 그대로 남았다. CSS가 캐시에 있으면 이득도 비용도 없었다.
 
 </section>
 
@@ -124,6 +331,7 @@ HTML 수신 기간은 첫 조각부터 마지막 조각까지의 시간이며 �
 - [React · renderToPipeableStream ↗](https://react.dev/reference/react-dom/server/renderToPipeableStream)
 - [Next.js · Streaming ↗](https://nextjs.org/docs/app/guides/streaming)
 - [Next.js · headers configuration ↗](https://nextjs.org/docs/app/api-reference/config/next-config-js/headers)
+- [vercel/next.js · Missing "Link" Header for Critical Resources in Production (Discussion #76995) ↗](https://github.com/vercel/next.js/discussions/76995): 정적 페이지는 production에서 Link 헤더를 넣지 않고(PPR를 켜면 넣음), 103 Early Hints 지원은 향후 작업으로 일정이 없다는 Next.js 팀 답변(2024-10, 2025-03).
 
 {/* 실제로 확인한 문서의 절·구현 위치·확인 날짜와 추가 출처를 남깁니다. */}
 
