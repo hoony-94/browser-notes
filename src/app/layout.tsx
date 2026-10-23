@@ -5,8 +5,10 @@ import "@/styles/tokens.css";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: { default: "Browser Notes — 프레임워크 너머, 브라우저 가까이", template: "%s · Browser Notes" },
+  metadataBase: new URL("https://browser-notes-alpha.vercel.app"),
+  title: { default: "Browser Notes · 프레임워크 너머, 브라우저 가까이", template: "%s · Browser Notes" },
   description: "브라우저의 설계 선택을 질문하고, 작은 실험으로 이해하는 프론트엔드 개발자의 연구 노트.",
+  openGraph: { type: "website", siteName: "Browser Notes", locale: "ko_KR" },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
