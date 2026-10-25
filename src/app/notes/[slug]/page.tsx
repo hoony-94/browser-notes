@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { FigureZoom } from "@/components/figure-zoom";
 import { ReadingProgress } from "@/components/reading-progress";
 import { getNote, getNotes } from "@/lib/notes";
 
@@ -47,6 +48,7 @@ export default async function NotePage({ params }: { params: Promise<{ slug: str
         )}
         <article className="prose"><Content /></article>
         <ReadingProgress />
+        <FigureZoom />
       </div>
     </main>
   );

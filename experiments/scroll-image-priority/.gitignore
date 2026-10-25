@@ -1,5 +1,0 @@
-.certs/
-tools/.bin/
-# 다시 만들 수 있는 화면 녹화 프레임과 캡처 이미지(노트에 쓴 것은 public/notes에 복사)
-results/*-film/
-results/devtools/*.png
