@@ -1,0 +1,330 @@
+export const note = {
+  title: "페이지 중간으로 바로 이동한다면, 브라우저는 어떤 이미지를 먼저 받아야 할까?",
+  description: "히어로 이미지를 먼저 받도록 해 둔 페이지에 링크로 중간부터 들어오면 어떤 일이 생기는지, 도착한 화면의 이미지를 먼저 보여주려면 무엇이 필요한지 측정했다.",
+  topic: "로딩과 네트워크",
+  status: "정리됨",
+  tags: ["Images", "Preload", "Fetch Priority", "Lazy Loading"],
+  createdAt: "2026-10-24",
+  updatedAt: "2026-10-25",
+  isExample: false,
+};
+
+export const toc = [
+  { id: "question", title: "출발한 질문" },
+  { id: "setup", title: "실험 환경" },
+  { id: "experiment-1", title: "실험 1 · 상단 힌트" },
+  { id: "experiment-2", title: "실험 2 · 해시로 고르기" },
+  { id: "judgment", title: "내 판단" },
+  { id: "sources", title: "근거와 출처" },
+];
+
+<section id="question">
+
+## 처음 보는 화면이 페이지 중간이라면, 상단 이미지의 preload는 여전히 유효할까?
+
+- 히어로 이미지나 페이지 상단의 중요 이미지를 preload하고 있다면, 사용자가 처음 보는 화면이 페이지 중간일 때도 이 우선순위는 유효할까?
+- 상단 이미지의 preload와 실제로 보이는 이미지의 요청이 겹친다면, 어느 쪽을 우선해야 할까?
+- 링크로 페이지 중간에 바로 도착한다면, 도착한 화면의 이미지를 먼저 받을 수 있을까?
+
+### 이 질문을 시작한 계기
+
+보통 히어로나 첫 화면 이미지는 preload하거나 `fetchpriority="high"`로 올려 둔다. 그런데 목차 링크, 공유받은 링크, 검색 결과처럼 페이지 중간으로 바로 들어오면 처음 보는 화면은 히어로가 아니다. 그때도 이 우선순위가 맞는지, 아니면 도착한 화면의 이미지를 먼저 받아 빨리 보여줄 수 있는지 궁금했다.
+
+찾아보니 이 경우를 위한 공식 기능은 없었다. preload와 `fetchpriority`는 화면 위치를 모르는 고정된 힌트이고, URL의 해시(`#section-5`)는 서버로 전송되지 않는다. `loading="lazy"`와 Chrome이 화면 안 이미지의 우선순위를 올리는 동작은 실제 화면을 보지만, 보이지 않는 이미지를 미루는 쪽이지 보이는 이미지를 앞당기는 기능은 아니다. [web.dev · Fetch Priority ↗](https://web.dev/articles/fetch-priority)
+
+### 처음 세운 가설
+
+- 중간으로 들어오면 히어로 힌트는 화면에 보이지 않는 이미지에 대역폭을 먼저 줘서 도착 화면을 늦출 것이다. 다만 손해는 히어로 한 장 크기 정도로 작을 것 같다.
+- 브라우저는 해시를 처음부터 알고 있으니, 도착 위치로 이동하고 나면 그 화면의 이미지를 금방 High로 올릴 것이다.
+- 서버는 해시를 모르니, 도착 화면 이미지를 먼저 받게 하려면 브라우저 쪽(`<head>`의 스크립트)에서 판단해야 할 것이다.
+
+</section>
+
+<section id="setup">
+
+## 쇼핑몰 같은 긴 페이지를 `#section-5`로 연다
+
+상품 이미지가 많은 목록 페이지를 흉내 냈다. 맨 위에 히어로가 있고, 섹션 10개에 상품이 6개씩 있다. 이 페이지를 `#section-5`로 바로 열고, 도착한 화면의 이미지가 모두 보이기까지 걸린 시간을 비교했다.
+
+| 항목 | 조건 |
+| --- | --- |
+| 브라우저 | Chrome 155. |
+| 화면 | 390 × 844 (모바일) |
+| 페이지 | 히어로 200 KB 1장 + 상품 40 KB 60장. 상품 이미지는 `loading="lazy"`, 모든 이미지에 `width`·`height`를 지정해 높이 변화는 없앰 |
+| 서버 | Node.js 22.14.0 `http2`(TLS). 연결 하나의 내려받기 대역폭을 서버가 흉내 냄 |
+| 네트워크 | 느린 망 1.6 Mbps + 응답마다 150 ms 지연, 빠른 망 9 Mbps + 40 ms, 제한 없음 |
+| 캐시·연결 | 측정마다 새 브라우저 컨텍스트(빈 캐시, 새 연결) |
+| 반복 | 조건마다 10회, 중앙값 |
+
+이미지는 크기만 맞춘 SVG라 끝까지 받아야 그려진다. 실제 JPEG·WebP는 받는 도중 일부가 먼저 보일 수 있다.
+
+### 서버가 우선순위를 따르느냐도 조건으로 넣었다
+
+HTTP/2에서는 연결 하나로 여러 응답이 동시에 오고, 대역폭이 좁으면 누구의 데이터를 먼저 보낼지 서버가 정한다. 브라우저는 요청마다 `priority` 헤더(RFC 9218)로 우선순위를 알려주고, 도중에 바꾸면 PRIORITY 프레임으로 다시 알린다. 하지만 이것은 힌트일 뿐 서버가 따를 의무는 없다. 실제로 서버·CDN의 우선순위 처리가 제대로 동작하지 않는다는 지적도 많았다. [RFC 9218 ↗](https://www.rfc-editor.org/rfc/rfc9218.html) · [Patrick Meenan · Velocity 2019 ↗](https://conferences.oreilly.com/velocity/vl-ca/public/schedule/detail/74562)
+
+그래서 서버가 대역폭을 나누는 방식을 양 끝으로 두 가지 만들었다. 실제 서비스는 그 사이 어딘가에 있을 것이다.
+
+| 서버 | 대역폭을 나누는 방식 |
+| --- | --- |
+| 우선순위를 따르는 서버 | 브라우저가 알려준 우선순위가 높은 응답부터 보낸다. 도중에 바뀐 우선순위도 반영한다 |
+| 우선순위를 무시하는 서버 | 진행 중인 응답이 대역폭을 똑같이 나눈다 |
+
+DevTools의 네트워크 스로틀링은 브라우저 안에서 요청마다 늦추는 방식이라, 서버가 우선순위를 따르는지에 따른 차이를 재현하기 어렵다고 보고 쓰지 않았다.
+
+### 무엇을 재나
+
+**도착 화면 완성**은 도착 화면에 보이는 이미지 8장(섹션 5의 6장과 섹션 6 첫 줄 2장)이 모두 그려지고, 사용자가 실제로 그 화면을 보고 있는 시각이다. 이미지가 먼저 다 와도 아직 맨 위를 보고 있거나 첫 화면 전이면 보이지 않으므로, 세 시각 중 가장 늦은 시각으로 정했다.
+
+<div className="small-copy">
+
+- 이미지가 그려진 시각: Element Timing의 `renderTime` [MDN ↗](https://developer.mozilla.org/en-US/docs/Web/API/PerformanceElementTiming)
+- 해시 위치로 이동한 시각: `scrollY`가 처음 0보다 커진 프레임
+- 첫 화면: First Contentful Paint
+- 그 밖에 요청마다 Chrome이 정한 우선순위와 그 변경(`Network.resourceChangedPriority`), 서버가 받은 우선순위 신호도 기록했다.
+
+</div>
+
+</section>
+
+<section id="experiment-1">
+
+## 실험 1 · 상단 힌트는 도착 화면을 늦출까?
+
+먼저 히어로 힌트만 바꿨다. 이 실험의 HTML은 15 KB다.
+
+| 조건 | 히어로 | 도착 섹션(섹션 5) 상품 이미지 |
+| --- | --- | --- |
+| A | 힌트 없음 | `loading="lazy"` |
+| B | `<img fetchpriority="high">` | lazy |
+| P | `<link rel="preload" as="image" fetchpriority="high">` | lazy |
+| C | 힌트 없음 | `loading="eager" fetchpriority="high"` (서버가 위치를 안다고 가정) |
+| D | `fetchpriority="high"` | eager + high |
+
+<ScrollPriorityExp1Chart />
+
+- **우선순위를 따르는 서버**: 히어로를 올리면(B·P) 도착 화면이 2.39초에서 2.78초로 0.39초 늦어졌다. 도착 섹션을 올린 C는 첫 이미지가 1.98초로 빨라졌지만, 화면 아래에 걸친 섹션 6 이미지 2장이 Low로 남아 완성은 A와 같았다.
+- **우선순위를 무시하는 서버**: 모든 조건이 약 8.96초였다. 힌트의 효과가 없었다.
+- **맨 위로 들어오면**: 우선순위를 따르는 서버에서 B의 히어로는 4.15초에서 1.75초로 빨라졌다. 힌트가 원래 목적대로는 동작했다. 우선순위를 무시하는 서버에서는 둘 다 4.15초였다.
+- **빠른 망과 제한 없음**: 차이가 0.1초 안팎이거나 없었다.
+
+<figure className="note-figure">
+  <img src="/notes/scroll-image-priority/film-exp1-priority.png" alt="1.6 Mbps, 우선순위를 따르는 서버에서 A·B·C 조건의 0.25초부터 3초까지 화면. 0.25초에는 세 조건 모두 히어로와 섹션 1이 보이는 맨 위 화면이고, 0.5초부터 섹션 5 화면으로 바뀐다. A와 C는 2.5초, B는 3초에 섹션 5 이미지가 모두 보인다." width="1512" height="1750" />
+  <figcaption>같은 시각의 실제 화면. 0.25초에는 셋 다 맨 위가 보였다가 해시 위치로 이동했다. 초록 테두리는 도착 화면 이미지가 모두 보인 뒤다. 녹화는 조건마다 1회라 중앙값과 조금 다르다.</figcaption>
+</figure>
+
+### 예상과 달랐던 것
+
+DevTools와 요청 기록을 보니, 히어로 힌트의 손해보다 브라우저가 도착 위치를 반영하는 방식이 결과를 더 크게 좌우했다.
+
+**① 해시 위치로 이동하기 전에, 맨 위 화면이 한 번 처리됐다.** 느린 망에서는 HTML이 다 오기 전인 0.2초쯤 맨 위 화면이 먼저 그려지고, 0.24초에 섹션 5로 이동했다. 그 사이 맨 위 기준으로 lazy 판단이 일어나 섹션 1~3의 이미지 14장(560 KB)이 요청됐다. 화면에 보인 이미지는 8장인데, 히어로까지 43장(1.88 MB)을 요청했다. HTML이 한 번에 오는 제한 없음 조건에서는 이런 일이 없었다(29장).
+
+이때 맨 위 화면에 있던 히어로와 섹션 1 이미지는 High로 올라갔고, 화면 밖으로 밀려난 뒤에도 내려가지 않았다.
+
+**② 도착 화면 이미지는 Low로 요청됐고, 다른 이미지 하나가 다 받아진 직후에야 High로 올라갔다.** 모든 측정에서 그 차이가 2~19 ms였다. 이미지 크기를 미리 지정해 둔 페이지라, 그 전까지 레이아웃이 다시 일어나지 않아서인 것 같다.
+
+<figure className="note-figure">
+  <img src="/notes/scroll-image-priority/devtools-exp1-b.png" alt="Chrome DevTools Network 패널. 조건 B. hero.svg는 High, p-1-1부터 p-1-4는 처음 Low에서 High로 바뀌었고, p-5와 p-6 이미지도 처음 Low에서 High로 바뀌었다. p-1-3과 p-1-4는 754 ms, p-5 이미지들은 약 2.5초가 걸렸다." width="1840" height="1030" />
+  <figcaption>실험 1의 B. Priority 열의 위는 최종, 아래는 처음 우선순위다. 맨 위 이미지(p-1)와 도착 화면 이미지(p-5)가 모두 Low에서 High로 바뀌었다. Time 열은 완료 시각이 아니라 요청이 걸린 시간이다.</figcaption>
+</figure>
+
+A가 2.39초로 나쁘지 않았던 것은 ①과 ② 덕분이었다. 잘못 High가 된 섹션 1 이미지가 먼저 다 받아지면서, ②의 재계산이 0.78초로 앞당겨졌다. 그런데 브라우저가 올린 우선순위가 서버에 늘 전달되지는 않았다. 브라우저 기록에서는 히어로도 High로 바뀌었지만 서버는 히어로를 High로 받은 적이 없었다. 섹션 1 이미지의 High가 서버에 전달되지 않은 1회는 도착 화면이 8.76초까지 늦어졌다.
+
+**답**: 중간으로 들어오면 히어로 힌트는 유효하지 않았다. 우선순위를 따르는 서버에서는 0.39초 손해였고, 무시하는 서버에서는 효과가 없었다. 도착 섹션에만 `fetchpriority="high"`를 줘도 화면 전체는 빨라지지 않았다.
+
+</section>
+
+<section id="experiment-2">
+
+## 실험 2 · 해시를 `<head>`에서 읽으면 도착 화면을 먼저 받을 수 있을까?
+
+서버는 해시를 모르지만 `<head>`의 인라인 스크립트는 `location.hash`를 HTML 맨 앞에서 읽을 수 있다. 실험 1의 ①과 ②를 피하려면, 우선순위를 바꾸는 것과 함께 첫 렌더 시점도 건드려야 할 것 같았다.
+
+### 실험 전에 확인한 것: Chrome은 파싱이 끝난 뒤 이동했다
+
+Next.js처럼 본문 뒤에 데이터(RSC payload)가 붙는 페이지를 흉내 내려고 HTML 끝에 100 KB를 붙였다(전체 115 KB). 각 섹션 바로 뒤에 파싱 시각을 남기는 작은 스크립트도 넣었다.
+
+느린 망에서 섹션 5는 0.21초에 파싱됐지만, Chrome은 문서 파싱이 끝난(0.74초) 직후인 0.75초에야 이동했다. 그 0.5초 동안 맨 위가 보였다. HTML 명세는 파싱 도중에도 대상 요소가 생기면 이동하도록 반복해서 시도하게 되어 있고, 시도 간격만 구현에 맡긴다. [HTML · try to scroll to the fragment ↗](https://html.spec.whatwg.org/multipage/browsing-the-web.html#try-to-scroll-to-the-fragment)
+
+그래서 대상 요소까지만 첫 렌더를 미루는 방법(E2t)과 문서 끝까지 미루는 방법(E2)을 나눠서 비교했다. 렌더를 미루는 데는 `<link rel="expect" href="#id" blocking="render">`를 썼다. 지정한 요소가 파싱될 때까지 첫 렌더를 막는 HTML 기능이다. Chrome 문서는 Chrome 124부터 지원, Firefox·Safari는 미지원으로 표시하고 있다. [Chrome · Render blocking ↗](https://developer.chrome.com/docs/web-platform/view-transitions/cross-document)
+
+### 비교한 조건
+
+E 조건은 모두 `<head>`의 스크립트가 해시를 보고 결정한다. 해시가 없으면 히어로 preload만 넣는다. HTML에 `fetchpriority`를 직접 쓰면 스크립트보다 preload scanner가 먼저 보고 요청하므로, 히어로 `<img>`에는 쓰지 않았다.
+
+| 조건 | 해시가 있을 때 |
+| --- | --- |
+| A, B, C | 실험 1과 같음 |
+| E1 | 도착 화면 이미지(그 섹션 + 다음 섹션 첫 줄)를 preload + high |
+| E2t | `rel="expect"`로 도착 요소(`#section-5`)가 파싱될 때까지 첫 렌더를 미룸 |
+| E2 | `rel="expect"`로 문서 끝(`#page-end`)이 파싱될 때까지 첫 렌더를 미룸 |
+| E3 | E1 + E2 |
+
+```html
+<script>
+  const id = decodeURIComponent(location.hash.slice(1));
+  const add = (attrs) => {
+    const link = document.createElement("link");
+    for (const name in attrs) link.setAttribute(name, attrs[name]);
+    document.head.append(link);
+  };
+  if (!id) {
+    add({ rel: "preload", as: "image", href: "/img/hero.svg", fetchpriority: "high" });
+  } else {
+    // 빌드할 때 만든 "섹션 id → 도착 화면 이미지" 목록 (E1)
+    for (const href of landingImages[id] ?? []) {
+      add({ rel: "preload", as: "image", href, fetchpriority: "high" });
+    }
+    // 문서 끝까지 첫 렌더를 미룬다 (E2)
+    add({ rel: "expect", href: "#page-end", blocking: "render" });
+  }
+</script>
+```
+
+### 관찰한 결과
+
+<ScrollPriorityExp2Chart />
+
+| 조건 | 도착 화면 완성 (따르는 서버) | 도착 화면 완성 (무시하는 서버) | 첫 화면 | 맨 위가 보인 시간 |
+| --- | --- | --- | --- | --- |
+| A 힌트 없음 | 2.76초 | 9.90초 | 0.21초 | 0.53초 / 3.73초 |
+| B 히어로 high | 3.06초 | 9.90초 | 0.21초 | 0.53초 / 3.73초 |
+| E1 preload | 2.76초 | 5.56초 | 0.22초 | 0.53초 / 5.34초 |
+| E2t 도착 요소까지 보류 | 2.68초 | 9.91초 | 0.24초 | 0.51초 / 3.71초 |
+| E2 문서 끝까지 보류 | 9.40초 | 9.93초 | 0.78초 / 1.18초 | 없음 |
+| **E3 preload + 보류** | **2.36초** | **2.78초** | 0.78초 / 2.78초 | 없음 |
+
+<p className="small-copy">1.6 Mbps, 각 조건 10회의 중앙값. 첫 화면과 맨 위가 보인 시간은 "따르는 서버 / 무시하는 서버"이고, 값이 하나면 두 서버가 같다.</p>
+
+**빠른 망(9 Mbps)**에서도 순서는 같았다. 우선순위를 따르는 서버에서 B 0.60초 → E3 0.45초, 무시하는 서버에서 B 1.80초 → E3 0.52초였다. 제한이 없으면 모두 0.06초 안팎으로 차이가 없었다.
+
+#### 1. 대상 요소까지만 미루면 효과가 없었다
+
+E2t는 섹션 5가 파싱되는 0.24초에 첫 화면을 그렸지만, 이동은 여전히 파싱이 끝난 뒤였다. 결과는 A와 거의 같았다. 대상 요소가 있어도 Chrome이 바로 이동하지 않기 때문이다.
+
+#### 2. 우선순위를 무시하는 서버에서는 맨 위를 4~5초 동안 봤다
+
+<ScrollPriorityTimelineFair />
+
+B에서는 맨 위 lazy 이미지 14장이 HTML과 대역폭을 나눠 쓰느라 HTML 파싱이 3.94초에야 끝났다. 해시 이동도 그때 일어났다. 사용자는 엉뚱한 맨 위 화면을 3.7초 동안 보다가 점프했다.
+
+E1은 도착 화면 이미지를 5.09초에 다 받았지만, preload까지 HTML과 경쟁해서 이동이 5.56초로 더 늦어졌다. 이미지는 먼저 왔는데 화면은 더 오래 맨 위였다.
+
+<figure className="note-figure">
+  <img src="/notes/scroll-image-priority/film-exp2-fair.png" alt="1.6 Mbps, 우선순위를 무시하는 서버에서 B·E1·E3의 0.5초부터 10초까지 화면. B는 3초까지 맨 위 화면이다가 4초에 섹션 5로 바뀌고 10초에 이미지가 모두 보인다. E1은 4초까지 맨 위이고 6초에 이미지까지 모두 보인다. E3는 2초까지 빈 화면이다가 3초에 이미지가 모두 보이는 섹션 5가 나타난다." width="1718" height="1750" />
+  <figcaption>우선순위를 무시하는 서버. B와 E1은 몇 초 동안 맨 위를 보여주다 이동했고, E3는 빈 화면을 2.78초 보여준 뒤 이미지까지 다 받은 도착 화면을 바로 보여줬다.</figcaption>
+</figure>
+
+<figure className="note-figure">
+  <img src="/notes/scroll-image-priority/devtools-exp2-b-fair.png" alt="Chrome DevTools Network 패널. 우선순위를 무시하는 서버의 B. 문서가 3.94초, p-1 이미지들이 약 3.3초가 걸렸고, p-5와 p-6 이미지는 3.95초 무렵 요청되어 약 5.9초가 걸렸다." width="1840" height="1030" />
+  <figcaption>우선순위를 무시하는 서버의 B. 문서(HTML) 자체가 3.94초 걸렸고, 도착 화면 이미지(p-5)는 그 뒤에야 요청됐다.</figcaption>
+</figure>
+
+#### 3. 렌더만 미루면 오히려 크게 늦어졌다
+
+<ScrollPriorityTimelinePriority />
+
+E2는 맨 위를 보여주지 않았지만, 우선순위를 따르는 서버에서도 9.40초가 걸렸다. 렌더가 풀린 직후 요청된 lazy 이미지는 화면 안에 있어도 Low로 시작했다. 그리고 실험 1의 ②처럼 다른 이미지가 끝날 때까지 High로 올라가지 않아, 30장이 넘는 다른 이미지와 함께 맨 뒤로 밀렸다.
+
+<figure className="note-figure">
+  <img src="/notes/scroll-image-priority/devtools-exp2-e2.png" alt="Chrome DevTools Network 패널. 조건 E2. p-5와 p-6 이미지는 처음 Low에서 최종 High로 바뀌었지만 각각 약 8.6초가 걸렸다. p-1 이미지들은 Low로 약 8.5초가 걸렸다." width="1840" height="1030" />
+  <figcaption>E2. 도착 화면 이미지(p-5)가 결국 High로 바뀌었지만 이미 늦었다. 맨 위 이미지(p-1)와 거의 같이 끝났다.</figcaption>
+</figure>
+
+#### 4. preload와 렌더 보류를 함께 쓰면(E3) 두 서버 모두에서 가장 빨랐다
+
+E3에서는 도착 화면 이미지 8장이 `<head>`에서 0.19초에 High로 요청됐다. 렌더를 미루는 동안에는 lazy 요청이 생기지 않으니, 그 8장이 대역폭을 거의 차지했다. 우선순위를 무시하는 서버에서도 9.90초가 2.78초로 줄어든 이유다. 첫 화면이 그려질 때는 이미지가 이미 다 와 있었다.
+
+<figure className="note-figure">
+  <img src="/notes/scroll-image-priority/devtools-exp2-e3.png" alt="Chrome DevTools Network 패널. 조건 E3. p-5와 p-6 이미지는 Initiator가 Script이고 처음과 최종 우선순위가 모두 High이며 약 2.15초가 걸렸다. hero.svg와 p-1 이미지는 Low로 시작해 약 8.5~10초가 걸렸다." width="1840" height="1030" />
+  <figcaption>E3. 도착 화면 이미지의 Initiator가 Script(head의 인라인 스크립트)이고 처음부터 High다. 히어로와 맨 위 이미지는 뒤로 밀렸다.</figcaption>
+</figure>
+
+<figure className="note-figure">
+  <img src="/notes/scroll-image-priority/film-exp2-priority.png" alt="1.6 Mbps, 우선순위를 따르는 서버에서 B·E2·E3의 0.5초부터 9.5초까지 화면. B는 0.5초에 맨 위 화면이고 1초부터 섹션 5가 보이며 3.5초에 이미지가 모두 보인다. E2와 E3는 0.5초에 빈 화면이고 1초부터 섹션 5가 보인다. E3는 2.5초, E2는 9.5초에 이미지가 모두 보인다." width="1512" height="1750" />
+  <figcaption>우선순위를 따르는 서버. B는 맨 위를 0.5초 보여준 뒤 이동했다. E2와 E3는 맨 위 없이 바로 도착 화면이 보였고, 이미지는 E3가 2.36초, E2가 9.4초에 다 보였다.</figcaption>
+</figure>
+
+#### 5. 맨 위로 들어올 때 손해는 없었다
+
+해시가 없으면 E3는 스크립트로 히어로 preload만 넣는다. 우선순위를 따르는 서버에서 히어로는 E3 1.96초, B 2.15초, 힌트 없음 4.55초였다. HTML에 직접 쓴 힌트보다 늦지 않았다.
+
+<figure className="note-figure">
+  <img src="/notes/scroll-image-priority/film-exp2-top.png" alt="1.6 Mbps, 우선순위를 따르는 서버에서 맨 위로 들어온 A·B·E3의 0.5초부터 4.75초까지 화면. 히어로는 B가 2초, E3가 2.5초, A가 4.75초 칸에서 보인다." width="1512" height="1750" />
+  <figcaption>맨 위로 진입. 이 녹화(조건마다 1회)에서는 히어로가 B는 2초, E3는 2.5초, A는 4.75초 칸에서 보였다. 10회 중앙값으로는 E3 1.96초, B 2.15초로 비슷했다.</figcaption>
+</figure>
+
+#### 6. 그래도 Chrome은 한 번은 맨 위 기준으로 처리했다
+
+E2·E3에서 맨 위는 화면에 한 번도 그려지지 않았다. 그런데도 맨 위 lazy 이미지 14장이 요청됐고, 우선순위를 무시하는 서버에서는 LCP가 화면 밖의 히어로(10.16초)로 잡혔다. 렌더 보류가 풀린 직후, 해시 위치로 이동하기 전에 맨 위 위치로 한 번 계산하는 것으로 보인다.
+
+**답**: 도착 화면 이미지는 먼저 받을 수 있었다. 다만 우선순위 힌트만으로는 안 됐고, 문서 끝까지 첫 렌더를 미루는 것과 함께 써야 했다(E3). 그러면 우선순위를 따르는 서버에서 23%, 무시하는 서버에서 72% 빨라졌고, 맨 위로 들어올 때의 손해는 없었다. 대신 첫 화면이 0.78초(무시하는 서버에서는 2.78초)까지 늦어졌다.
+
+</section>
+
+<section id="judgment">
+
+## 실험 후, 내 판단은 어떻게 바뀌었나?
+
+처음 세운 가설 중 방향이 맞은 것은 절반 정도였다.
+
+- **히어로 힌트가 도착 화면을 늦출 것이다**: 맞았다. 다만 손해는 0.3~0.4초였고, 서버가 우선순위를 따를 때만 생겼다. 생각보다 작은 문제였다.
+- **브라우저가 도착 위치에서 금방 High로 올릴 것이다**: 틀렸다. Chrome은 파싱이 끝난 뒤에야 이동했고, 그 전에 맨 위 기준으로 lazy 이미지를 요청하고 High로 올렸다. 도착 화면 이미지는 다른 이미지가 끝날 때까지 Low였다. 히어로 힌트보다 이쪽이 훨씬 큰 문제였다.
+- **브라우저 쪽에서 판단해야 할 것이다**: 맞았다. 하지만 우선순위만 바꿔서는 안 됐고, 첫 렌더 시점까지 건드려야 했다.
+
+그리고 서버가 우선순위를 따르느냐가 생각보다 훨씬 중요했다. 무시하는 서버에서는 `fetchpriority`가 맨 위로 들어올 때조차 아무 효과가 없었다. 이 경우에는 받는 양을 줄이거나, 경쟁이 생기는 시점 자체를 미루는 것만 효과가 있었다.
+
+그래서 제목의 질문에는 이렇게 답할 수 있을 것 같다. 페이지 중간으로 바로 들어온다면 브라우저는 도착 화면의 이미지를 먼저 받아야 한다. 그런데 지금의 Chrome은 스스로 그렇게 하지 못하고, 페이지가 그렇게 시키려면 첫 화면을 늦추는 대가가 따른다.
+
+### 프로덕션에 쓸 만한가?
+
+E3는 효과가 분명했다. 하지만 바로 기본값으로 넣을 만큼은 아니라고 본다. 이득이 큰 조건이 좁고, 대가도 분명하다.
+
+**이득이 크려면 이 조건이 모두 맞아야 했다.**
+
+1. **링크로 중간에 들어오는 방문이 실제로 많다.** 목차 공유, 검색 결과 딥링크, 마케팅 링크의 앵커 같은 경우다. 맨 위로 들어오면 이득이 없다.
+2. **이미지가 많은 긴 페이지다.** 도착 위치 주변에 lazy 이미지가 많아야 경쟁이 생긴다.
+3. **느린 망의 방문이 많거나, 서버가 우선순위를 따르지 않는다.** 9 Mbps에서는 우선순위를 따르는 서버에서 0.15초, 무시하는 서버에서 1.28초 차이였고, 제한이 없으면 차이가 없었다.
+
+**대가는 이렇다.**
+
+- **첫 화면이 늦어진다.** 맨 위를 보여주다 점프하는 대신, 빈 화면을 0.78초(무시하는 서버에서는 2.78초) 보여준다. 엉뚱한 화면보다 빈 화면이 낫다고 생각하지만 FCP 지표는 나빠지고, 빈 화면이 2초를 넘으면 이탈이 걱정된다.
+- **스트리밍과 부딪힌다.** 문서 끝까지 렌더를 미루면, `Suspense`로 늦게 오는 부분까지 다 기다린다. Next.js처럼 첫 화면을 일부러 먼저 보내는 페이지에서는 그 이점을 버리는 셈이다. 이 실험의 HTML은 한 번에 만들어지는 페이지였으므로, 스트리밍 페이지에서는 다시 재봐야 한다. Early Hints 노트에서 "첫 화면을 빨리 보내는 것"이 중요했던 것과 정면으로 부딪히는 부분이다.
+- **도착 화면 이미지 목록을 관리해야 한다.** 섹션마다 첫 화면에 보일 이미지를 빌드할 때 알아야 한다. 화면 크기마다 보이는 범위가 다르고, 반응형 이미지라면 preload에도 `imagesrcset`·`imagesizes`를 똑같이 넣어야 같은 파일을 두 번 받지 않는다.
+- **렌더 보류는 Chrome에서만 동작한다고 문서에 나와 있다.** 지원하지 않는 브라우저에서는 E1과 같아지는데, E1은 우선순위를 무시하는 서버에서 맨 위를 더 오래 보여줬다. Safari·Firefox는 직접 확인하지 않았다.
+
+**그래서 실제로 쓴다면 이 순서로 할 것 같다.**
+
+1. 먼저 해시로 들어오는 방문 비율을 본다. 적으면 아무것도 하지 않는다.
+2. 많다면 히어로 preload만 조건부로 바꾼다. 해시가 있으면 넣지 않고, 없으면 스크립트로 넣는다. 맨 위 진입은 B와 같았고(1.96초 vs 2.15초), 중간 진입은 A와 같아져 0.3초를 아꼈다. 코드 몇 줄이고 잃는 것이 거의 없다.
+3. E1(preload만)은 쓰지 않는다. 우선순위를 따르는 서버에서는 이득이 없었고, 무시하는 서버에서는 맨 위를 더 오래 보여줬다.
+4. E3는 HTML이 한 번에 오는 이미지 많은 목록 페이지에서만, 일부 트래픽에 시험한다. 필드 데이터에서 FCP·LCP·이탈률을 함께 본다. 스트리밍하는 페이지에는 넣지 않는다.
+
+결국 이 문제는 페이지가 우회하기보다 브라우저가 해시 위치를 먼저 반영해야 풀리는 문제라고 생각한다. E3가 하는 일(도착 화면을 먼저 받고, 도착 화면부터 그리기)은 브라우저가 해시를 처음부터 알고 있으니 스스로 할 수 있는 일이다.
+
+### 브라우저에 바라는 것
+
+아래는 지금 제공되는 기능이 아니라, 이번 실험에서 본 Chrome 155의 동작을 바탕으로 한 바람이다. 아직 재현 페이지를 따로 만들어 확인하는 중이다.
+
+- **대상 요소가 파싱되면 그 위치로 먼저 이동하기.** 적어도 첫 렌더와 lazy 판단 전에 이동하면, 맨 위 이미지를 요청할 일이 없다.
+- **렌더 보류가 풀린 직후 맨 위 기준으로 계산하지 않기.** 보이지 않은 맨 위 이미지가 요청되고 LCP 후보가 되는 일이 없어야 한다.
+- **스크롤로 화면에 들어온 이미지의 우선순위를 바로 다시 계산하기.** 다른 이미지가 끝나는 것을 기다리지 않아야 한다.
+- **브라우저가 바꾼 우선순위를 서버에 일관되게 전달하기.** 히어로처럼 브라우저에서는 High인데 서버는 모르는 경우가 없어야 한다.
+
+</section>
+
+<section id="sources">
+
+## 근거와 출처
+
+- [HTML Standard · try to scroll to the fragment ↗](https://html.spec.whatwg.org/multipage/browsing-the-web.html#try-to-scroll-to-the-fragment): 파싱 도중에도 대상 요소가 생기면 이동을 다시 시도하고, 시도 간격은 구현에 맡긴다.
+- [Chrome · Cross-document view transitions, Render blocking ↗](https://developer.chrome.com/docs/web-platform/view-transitions/cross-document): `<link rel="expect" blocking="render">`. Chrome 124부터 지원, Firefox·Safari는 미지원으로 표시.
+- [web.dev · Optimize resource loading with the Fetch Priority API ↗](https://web.dev/articles/fetch-priority)
+- [web.dev · Browser-level image lazy loading ↗](https://web.dev/articles/browser-level-image-lazy-loading): Chrome의 lazy loading 거리 기준은 4G에서 1250px, 그보다 느리면 2500px.
+- [DebugBear · Chrome image request prioritization ↗](https://www.debugbear.com/blog/chrome-image-request-prioritization)
+- [RFC 9218 · Extensible Prioritization Scheme for HTTP ↗](https://www.rfc-editor.org/rfc/rfc9218.html)
+- [Patrick Meenan · Better HTTP/2 prioritization for a faster web, Velocity 2019 ↗](https://conferences.oreilly.com/velocity/vl-ca/public/schedule/detail/74562)
+- [MDN · PerformanceElementTiming ↗](https://developer.mozilla.org/en-US/docs/Web/API/PerformanceElementTiming)
+
+실험 코드와 원자료는 저장소의 `experiments/scroll-image-priority`에 있다. 확인 날짜는 2026-10-25다.
+
+</section>
