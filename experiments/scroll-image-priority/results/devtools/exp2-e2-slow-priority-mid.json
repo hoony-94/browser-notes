@@ -1,0 +1,409 @@
+{
+  "summary": {
+    "fcp": 808,
+    "firstFrame": [
+      764,
+      0
+    ],
+    "parsed": {
+      "section-1": 210.39999997615814,
+      "section-2": 215.80000001192093,
+      "section-3": 220.69999998807907,
+      "section-4": 224.60000002384186,
+      "section-5": 228.5,
+      "section-6": 233.60000002384186,
+      "section-7": 238.80000001192093,
+      "section-8": 247.60000002384186,
+      "section-9": 251.30000001192093,
+      "section-10": 255.5,
+      "page-end": 756.8999999761581
+    },
+    "url": "https://localhost:4433/shop?cond=E2&net=slow&sched=priority&tail=100#section-5",
+    "scrollY": 3422,
+    "viewport": [
+      390,
+      844
+    ],
+    "effectiveType": "4g",
+    "visible": [
+      "p-5-1",
+      "p-5-2",
+      "p-5-3",
+      "p-5-4",
+      "p-5-5",
+      "p-5-6",
+      "p-6-1",
+      "p-6-2"
+    ],
+    "viewportDone": 9380,
+    "viewportFirst": 9380,
+    "heroShown": 10188,
+    "lcp": {
+      "t": 9380,
+      "id": "p-5-1"
+    },
+    "firstScroll": 767,
+    "requested": 43,
+    "requestedBytes": 1880000,
+    "scroll": [
+      [
+        764,
+        0
+      ],
+      [
+        767,
+        3422
+      ]
+    ]
+  },
+  "server": [
+    {
+      "path": "/shop?cond=E2&net=slow&sched=priority&tail=100",
+      "start": 1,
+      "urgency": 0,
+      "changes": [],
+      "done": 747
+    },
+    {
+      "path": "/img/hero.svg",
+      "start": 194,
+      "urgency": 3,
+      "changes": [],
+      "done": 10144
+    },
+    {
+      "path": "/img/p-1-1.svg",
+      "start": 759,
+      "urgency": 3,
+      "changes": [],
+      "done": 9281
+    },
+    {
+      "path": "/img/p-1-2.svg",
+      "start": 759,
+      "urgency": 3,
+      "changes": [],
+      "done": 9285
+    },
+    {
+      "path": "/img/p-1-3.svg",
+      "start": 759,
+      "urgency": 3,
+      "changes": [],
+      "done": 9350
+    },
+    {
+      "path": "/img/p-1-4.svg",
+      "start": 760,
+      "urgency": 3,
+      "changes": [],
+      "done": 9358
+    },
+    {
+      "path": "/img/p-1-5.svg",
+      "start": 760,
+      "urgency": 3,
+      "changes": [],
+      "done": 9363
+    },
+    {
+      "path": "/img/p-1-6.svg",
+      "start": 760,
+      "urgency": 3,
+      "changes": [],
+      "done": 9369
+    },
+    {
+      "path": "/img/p-2-1.svg",
+      "start": 760,
+      "urgency": 3,
+      "changes": [],
+      "done": 9373
+    },
+    {
+      "path": "/img/p-2-2.svg",
+      "start": 760,
+      "urgency": 3,
+      "changes": [],
+      "done": 9382
+    },
+    {
+      "path": "/img/p-2-3.svg",
+      "start": 760,
+      "urgency": 3,
+      "changes": [],
+      "done": 9390
+    },
+    {
+      "path": "/img/p-2-4.svg",
+      "start": 760,
+      "urgency": 3,
+      "changes": [],
+      "done": 9396
+    },
+    {
+      "path": "/img/p-2-5.svg",
+      "start": 760,
+      "urgency": 3,
+      "changes": [],
+      "done": 9400
+    },
+    {
+      "path": "/img/p-2-6.svg",
+      "start": 761,
+      "urgency": 3,
+      "changes": [],
+      "done": 9418
+    },
+    {
+      "path": "/img/p-3-1.svg",
+      "start": 761,
+      "urgency": 3,
+      "changes": [],
+      "done": 9423
+    },
+    {
+      "path": "/img/p-3-2.svg",
+      "start": 761,
+      "urgency": 3,
+      "changes": [],
+      "done": 9428
+    },
+    {
+      "path": "/img/p-3-3.svg",
+      "start": 766,
+      "urgency": 3,
+      "changes": [],
+      "done": 9445
+    },
+    {
+      "path": "/img/p-3-4.svg",
+      "start": 769,
+      "urgency": 3,
+      "changes": [],
+      "done": 9456
+    },
+    {
+      "path": "/img/p-3-5.svg",
+      "start": 770,
+      "urgency": 3,
+      "changes": [],
+      "done": 9460
+    },
+    {
+      "path": "/img/p-3-6.svg",
+      "start": 770,
+      "urgency": 3,
+      "changes": [],
+      "done": 9464
+    },
+    {
+      "path": "/img/p-4-1.svg",
+      "start": 770,
+      "urgency": 3,
+      "changes": [],
+      "done": 9468
+    },
+    {
+      "path": "/img/p-4-2.svg",
+      "start": 770,
+      "urgency": 3,
+      "changes": [],
+      "done": 9476
+    },
+    {
+      "path": "/img/p-4-3.svg",
+      "start": 770,
+      "urgency": 3,
+      "changes": [],
+      "done": 9480
+    },
+    {
+      "path": "/img/p-4-4.svg",
+      "start": 770,
+      "urgency": 3,
+      "changes": [],
+      "done": 9484
+    },
+    {
+      "path": "/img/p-4-5.svg",
+      "start": 770,
+      "urgency": 3,
+      "changes": [],
+      "done": 9488
+    },
+    {
+      "path": "/img/p-4-6.svg",
+      "start": 770,
+      "urgency": 3,
+      "changes": [],
+      "done": 9488
+    },
+    {
+      "path": "/img/p-5-1.svg",
+      "start": 770,
+      "urgency": 3,
+      "changes": [
+        [
+          9291,
+          1
+        ]
+      ],
+      "done": 9345
+    },
+    {
+      "path": "/img/p-5-2.svg",
+      "start": 770,
+      "urgency": 3,
+      "changes": [
+        [
+          9291,
+          1
+        ]
+      ],
+      "done": 9345
+    },
+    {
+      "path": "/img/p-5-3.svg",
+      "start": 770,
+      "urgency": 3,
+      "changes": [
+        [
+          9291,
+          1
+        ]
+      ],
+      "done": 9350
+    },
+    {
+      "path": "/img/p-5-4.svg",
+      "start": 770,
+      "urgency": 3,
+      "changes": [
+        [
+          9291,
+          1
+        ]
+      ],
+      "done": 9350
+    },
+    {
+      "path": "/img/p-5-5.svg",
+      "start": 771,
+      "urgency": 3,
+      "changes": [
+        [
+          9291,
+          1
+        ]
+      ],
+      "done": 9350
+    },
+    {
+      "path": "/img/p-5-6.svg",
+      "start": 771,
+      "urgency": 3,
+      "changes": [
+        [
+          9291,
+          1
+        ]
+      ],
+      "done": 9350
+    },
+    {
+      "path": "/img/p-6-1.svg",
+      "start": 771,
+      "urgency": 3,
+      "changes": [
+        [
+          9291,
+          1
+        ]
+      ],
+      "done": 9350
+    },
+    {
+      "path": "/img/p-6-2.svg",
+      "start": 771,
+      "urgency": 3,
+      "changes": [
+        [
+          9291,
+          1
+        ]
+      ],
+      "done": 9350
+    },
+    {
+      "path": "/img/p-6-3.svg",
+      "start": 771,
+      "urgency": 3,
+      "changes": [],
+      "done": 9511
+    },
+    {
+      "path": "/img/p-6-4.svg",
+      "start": 771,
+      "urgency": 3,
+      "changes": [],
+      "done": 9511
+    },
+    {
+      "path": "/img/p-6-5.svg",
+      "start": 771,
+      "urgency": 3,
+      "changes": [],
+      "done": 9511
+    },
+    {
+      "path": "/img/p-6-6.svg",
+      "start": 772,
+      "urgency": 3,
+      "changes": [],
+      "done": 9511
+    },
+    {
+      "path": "/img/p-7-1.svg",
+      "start": 772,
+      "urgency": 3,
+      "changes": [],
+      "done": 9515
+    },
+    {
+      "path": "/img/p-7-2.svg",
+      "start": 772,
+      "urgency": 3,
+      "changes": [],
+      "done": 9515
+    },
+    {
+      "path": "/img/p-7-3.svg",
+      "start": 772,
+      "urgency": 3,
+      "changes": [],
+      "done": 9515
+    },
+    {
+      "path": "/img/p-7-4.svg",
+      "start": 772,
+      "urgency": 3,
+      "changes": [],
+      "done": 9515
+    },
+    {
+      "path": "/img/p-7-5.svg",
+      "start": 772,
+      "urgency": 3,
+      "changes": [],
+      "done": 9515
+    },
+    {
+      "path": "/img/p-7-6.svg",
+      "start": 772,
+      "urgency": 3,
+      "changes": [],
+      "done": 9515
+    }
+  ]
+}

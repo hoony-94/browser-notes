@@ -1,0 +1,2261 @@
+{
+  "meta": {
+    "name": "note-exp2",
+    "date": "2026-10-25T13:06:40.738Z",
+    "product": "Chrome/155.0.8059.86",
+    "repeat": 1,
+    "cards": "lazy",
+    "tail": 100
+  },
+  "rows": [
+    {
+      "net": "slow",
+      "sched": "priority",
+      "entry": "mid",
+      "cond": "B",
+      "n": 1,
+      "viewportDone": 3168,
+      "viewportSeen": 3168,
+      "viewportSeenRange": "3168–3168",
+      "topVisible": 524,
+      "viewportFirst": 3152,
+      "heroShown": 3748,
+      "lcp": 3152,
+      "lcpId": "p-5-1",
+      "firstScroll": 744,
+      "fcp": 220,
+      "topPainted": "1/1",
+      "targetParsed": 216,
+      "endParsed": 738,
+      "topRequested": 12,
+      "requested": 43,
+      "kb": 1880,
+      "heroPriority": "High",
+      "targetStart": 745,
+      "targetSent": 746,
+      "targetPriority": "Low",
+      "targetBoost": 1344,
+      "targetServerHigh": 1343,
+      "serverHighRate": "8/8"
+    },
+    {
+      "net": "slow",
+      "sched": "priority",
+      "entry": "mid",
+      "cond": "E2",
+      "n": 1,
+      "viewportDone": 9432,
+      "viewportSeen": 9432,
+      "viewportSeenRange": "9432–9432",
+      "topVisible": 0,
+      "viewportFirst": 9404,
+      "heroShown": 10152,
+      "lcp": 9404,
+      "lcpId": "p-5-1",
+      "firstScroll": 763,
+      "fcp": 768,
+      "topPainted": "0/1",
+      "targetParsed": 219,
+      "endParsed": 747,
+      "topRequested": 12,
+      "requested": 43,
+      "kb": 1880,
+      "heroPriority": "Low",
+      "targetStart": 764,
+      "targetSent": 766,
+      "targetPriority": "Low",
+      "targetBoost": 9364,
+      "targetServerHigh": 9364,
+      "serverHighRate": "8/8"
+    },
+    {
+      "net": "slow",
+      "sched": "priority",
+      "entry": "mid",
+      "cond": "E3",
+      "n": 1,
+      "viewportDone": 2364,
+      "viewportSeen": 2364,
+      "viewportSeenRange": "2364–2364",
+      "topVisible": 0,
+      "viewportFirst": 2348,
+      "heroShown": 10160,
+      "lcp": 2348,
+      "lcpId": "p-5-1",
+      "firstScroll": 775,
+      "fcp": 780,
+      "topPainted": "0/1",
+      "targetParsed": 221,
+      "endParsed": 745,
+      "topRequested": 12,
+      "requested": 43,
+      "kb": 1880,
+      "heroPriority": "Low",
+      "targetStart": 191,
+      "targetSent": 191,
+      "targetPriority": "High",
+      "targetBoost": null,
+      "targetServerHigh": 190,
+      "serverHighRate": "8/8"
+    }
+  ],
+  "runs": [
+    {
+      "net": "slow",
+      "sched": "priority",
+      "entry": "mid",
+      "cond": "B",
+      "rep": 1,
+      "protocol": "h2",
+      "summary": {
+        "fcp": 220,
+        "firstFrame": [
+          203,
+          0
+        ],
+        "parsed": {
+          "section-1": 189.69999998807907,
+          "section-2": 204.19999998807907,
+          "section-3": 204.39999997615814,
+          "section-4": 206,
+          "section-5": 215.69999998807907,
+          "section-6": 215.69999998807907,
+          "section-7": 219,
+          "section-8": 227.79999995231628,
+          "section-9": 232.69999998807907,
+          "section-10": 236.19999998807907,
+          "page-end": 737.5
+        },
+        "url": "https://localhost:4433/shop?cond=B&net=slow&sched=priority&at=5&cards=lazy&tail=100#section-5",
+        "scrollY": 3422,
+        "viewport": [
+          390,
+          844
+        ],
+        "effectiveType": "4g",
+        "visible": [
+          "p-5-1",
+          "p-5-2",
+          "p-5-3",
+          "p-5-4",
+          "p-5-5",
+          "p-5-6",
+          "p-6-1",
+          "p-6-2"
+        ],
+        "viewportDone": 3168,
+        "viewportFirst": 3152,
+        "heroShown": 3748,
+        "lcp": {
+          "t": 3152,
+          "id": "p-5-1"
+        },
+        "firstScroll": 744,
+        "requested": 43,
+        "requestedBytes": 1880000,
+        "scroll": [
+          [
+            203,
+            0
+          ],
+          [
+            744,
+            3422
+          ]
+        ]
+      },
+      "images": {
+        "hero": {
+          "initial": "High",
+          "start": 185,
+          "sent": 185,
+          "end": 3738,
+          "changes": []
+        },
+        "p-1-1": {
+          "initial": "Low",
+          "start": 203,
+          "sent": 204,
+          "end": 10005,
+          "changes": [
+            [
+              213,
+              "High"
+            ]
+          ]
+        },
+        "p-1-2": {
+          "initial": "Low",
+          "start": 203,
+          "sent": 204,
+          "end": 1335,
+          "changes": [
+            [
+              213,
+              "High"
+            ]
+          ]
+        },
+        "p-1-3": {
+          "initial": "Low",
+          "start": 203,
+          "sent": 204,
+          "end": 10011,
+          "changes": [
+            [
+              213,
+              "High"
+            ]
+          ]
+        },
+        "p-1-4": {
+          "initial": "Low",
+          "start": 203,
+          "sent": 204,
+          "end": 1335,
+          "changes": [
+            [
+              213,
+              "High"
+            ]
+          ]
+        },
+        "p-1-5": {
+          "initial": "Low",
+          "start": 203,
+          "sent": 204,
+          "end": 10015,
+          "changes": []
+        },
+        "p-1-6": {
+          "initial": "Low",
+          "start": 203,
+          "sent": 204,
+          "end": 10027,
+          "changes": []
+        },
+        "p-2-1": {
+          "initial": "Low",
+          "start": 204,
+          "sent": 204,
+          "end": 10037,
+          "changes": []
+        },
+        "p-2-2": {
+          "initial": "Low",
+          "start": 204,
+          "sent": 205,
+          "end": 10047,
+          "changes": []
+        },
+        "p-2-3": {
+          "initial": "Low",
+          "start": 204,
+          "sent": 205,
+          "end": 10056,
+          "changes": []
+        },
+        "p-2-4": {
+          "initial": "Low",
+          "start": 214,
+          "sent": 215,
+          "end": 10064,
+          "changes": []
+        },
+        "p-2-5": {
+          "initial": "Low",
+          "start": 214,
+          "sent": 215,
+          "end": 10073,
+          "changes": []
+        },
+        "p-2-6": {
+          "initial": "Low",
+          "start": 214,
+          "sent": 215,
+          "end": 10083,
+          "changes": []
+        },
+        "p-3-1": {
+          "initial": "Low",
+          "start": 214,
+          "sent": 215,
+          "end": 10087,
+          "changes": []
+        },
+        "p-3-2": {
+          "initial": "Low",
+          "start": 214,
+          "sent": 216,
+          "end": 10097,
+          "changes": []
+        },
+        "p-3-3": {
+          "initial": "Low",
+          "start": 744,
+          "sent": 745,
+          "end": 10101,
+          "changes": []
+        },
+        "p-3-4": {
+          "initial": "Low",
+          "start": 744,
+          "sent": 745,
+          "end": 10106,
+          "changes": []
+        },
+        "p-3-5": {
+          "initial": "Low",
+          "start": 744,
+          "sent": 745,
+          "end": 10110,
+          "changes": []
+        },
+        "p-3-6": {
+          "initial": "Low",
+          "start": 744,
+          "sent": 745,
+          "end": 10115,
+          "changes": []
+        },
+        "p-4-1": {
+          "initial": "Low",
+          "start": 744,
+          "sent": 745,
+          "end": 10120,
+          "changes": []
+        },
+        "p-4-2": {
+          "initial": "Low",
+          "start": 744,
+          "sent": 745,
+          "end": 10120,
+          "changes": []
+        },
+        "p-4-3": {
+          "initial": "Low",
+          "start": 744,
+          "sent": 745,
+          "end": 10124,
+          "changes": []
+        },
+        "p-4-4": {
+          "initial": "Low",
+          "start": 744,
+          "sent": 745,
+          "end": 10124,
+          "changes": []
+        },
+        "p-4-5": {
+          "initial": "Low",
+          "start": 744,
+          "sent": 746,
+          "end": 10129,
+          "changes": []
+        },
+        "p-4-6": {
+          "initial": "Low",
+          "start": 745,
+          "sent": 746,
+          "end": 10129,
+          "changes": []
+        },
+        "p-5-1": {
+          "initial": "Low",
+          "start": 745,
+          "sent": 746,
+          "end": 3138,
+          "changes": [
+            [
+              1344,
+              "High"
+            ]
+          ]
+        },
+        "p-5-2": {
+          "initial": "Low",
+          "start": 745,
+          "sent": 746,
+          "end": 3143,
+          "changes": [
+            [
+              1344,
+              "High"
+            ]
+          ]
+        },
+        "p-5-3": {
+          "initial": "Low",
+          "start": 745,
+          "sent": 746,
+          "end": 3144,
+          "changes": [
+            [
+              1344,
+              "High"
+            ]
+          ]
+        },
+        "p-5-4": {
+          "initial": "Low",
+          "start": 745,
+          "sent": 746,
+          "end": 3143,
+          "changes": [
+            [
+              1344,
+              "High"
+            ]
+          ]
+        },
+        "p-5-5": {
+          "initial": "Low",
+          "start": 745,
+          "sent": 746,
+          "end": 3147,
+          "changes": [
+            [
+              1344,
+              "High"
+            ]
+          ]
+        },
+        "p-5-6": {
+          "initial": "Low",
+          "start": 745,
+          "sent": 746,
+          "end": 3148,
+          "changes": [
+            [
+              1344,
+              "High"
+            ]
+          ]
+        },
+        "p-6-1": {
+          "initial": "Low",
+          "start": 745,
+          "sent": 746,
+          "end": 3147,
+          "changes": [
+            [
+              1344,
+              "High"
+            ]
+          ]
+        },
+        "p-6-2": {
+          "initial": "Low",
+          "start": 745,
+          "sent": 746,
+          "end": 3147,
+          "changes": [
+            [
+              1344,
+              "High"
+            ]
+          ]
+        },
+        "p-6-3": {
+          "initial": "Low",
+          "start": 745,
+          "sent": 747,
+          "end": 10129,
+          "changes": []
+        },
+        "p-6-4": {
+          "initial": "Low",
+          "start": 745,
+          "sent": 747,
+          "end": 10132,
+          "changes": []
+        },
+        "p-6-5": {
+          "initial": "Low",
+          "start": 745,
+          "sent": 747,
+          "end": 10132,
+          "changes": []
+        },
+        "p-6-6": {
+          "initial": "Low",
+          "start": 745,
+          "sent": 747,
+          "end": 10132,
+          "changes": []
+        },
+        "p-7-1": {
+          "initial": "Low",
+          "start": 745,
+          "sent": 747,
+          "end": 10132,
+          "changes": []
+        },
+        "p-7-2": {
+          "initial": "Low",
+          "start": 745,
+          "sent": 747,
+          "end": 10133,
+          "changes": []
+        },
+        "p-7-3": {
+          "initial": "Low",
+          "start": 745,
+          "sent": 747,
+          "end": 10137,
+          "changes": []
+        },
+        "p-7-4": {
+          "initial": "Low",
+          "start": 745,
+          "sent": 747,
+          "end": 10137,
+          "changes": []
+        },
+        "p-7-5": {
+          "initial": "Low",
+          "start": 745,
+          "sent": 747,
+          "end": 10137,
+          "changes": []
+        },
+        "p-7-6": {
+          "initial": "Low",
+          "start": 745,
+          "sent": 747,
+          "end": 10137,
+          "changes": []
+        }
+      },
+      "server": {
+        "hero": {
+          "start": 185,
+          "urgency": 1,
+          "changes": [],
+          "done": 3736
+        },
+        "p-1-1": {
+          "start": 203,
+          "urgency": 3,
+          "changes": [],
+          "done": 10004
+        },
+        "p-1-2": {
+          "start": 203,
+          "urgency": 3,
+          "changes": [
+            [
+              212,
+              1
+            ]
+          ],
+          "done": 1334
+        },
+        "p-1-3": {
+          "start": 203,
+          "urgency": 3,
+          "changes": [],
+          "done": 10009
+        },
+        "p-1-4": {
+          "start": 203,
+          "urgency": 3,
+          "changes": [
+            [
+              212,
+              1
+            ]
+          ],
+          "done": 1334
+        },
+        "p-1-5": {
+          "start": 203,
+          "urgency": 3,
+          "changes": [],
+          "done": 10013
+        },
+        "p-1-6": {
+          "start": 203,
+          "urgency": 3,
+          "changes": [],
+          "done": 10026
+        },
+        "p-2-1": {
+          "start": 204,
+          "urgency": 3,
+          "changes": [],
+          "done": 10035
+        },
+        "p-2-2": {
+          "start": 204,
+          "urgency": 3,
+          "changes": [],
+          "done": 10045
+        },
+        "p-2-3": {
+          "start": 204,
+          "urgency": 3,
+          "changes": [],
+          "done": 10055
+        },
+        "p-2-4": {
+          "start": 214,
+          "urgency": 3,
+          "changes": [],
+          "done": 10063
+        },
+        "p-2-5": {
+          "start": 214,
+          "urgency": 3,
+          "changes": [],
+          "done": 10072
+        },
+        "p-2-6": {
+          "start": 214,
+          "urgency": 3,
+          "changes": [],
+          "done": 10081
+        },
+        "p-3-1": {
+          "start": 215,
+          "urgency": 3,
+          "changes": [],
+          "done": 10086
+        },
+        "p-3-2": {
+          "start": 215,
+          "urgency": 3,
+          "changes": [],
+          "done": 10096
+        },
+        "p-3-3": {
+          "start": 744,
+          "urgency": 3,
+          "changes": [],
+          "done": 10100
+        },
+        "p-3-4": {
+          "start": 745,
+          "urgency": 3,
+          "changes": [],
+          "done": 10104
+        },
+        "p-3-5": {
+          "start": 745,
+          "urgency": 3,
+          "changes": [],
+          "done": 10109
+        },
+        "p-3-6": {
+          "start": 745,
+          "urgency": 3,
+          "changes": [],
+          "done": 10114
+        },
+        "p-4-1": {
+          "start": 745,
+          "urgency": 3,
+          "changes": [],
+          "done": 10119
+        },
+        "p-4-2": {
+          "start": 745,
+          "urgency": 3,
+          "changes": [],
+          "done": 10119
+        },
+        "p-4-3": {
+          "start": 745,
+          "urgency": 3,
+          "changes": [],
+          "done": 10122
+        },
+        "p-4-4": {
+          "start": 745,
+          "urgency": 3,
+          "changes": [],
+          "done": 10122
+        },
+        "p-4-5": {
+          "start": 745,
+          "urgency": 3,
+          "changes": [],
+          "done": 10127
+        },
+        "p-4-6": {
+          "start": 745,
+          "urgency": 3,
+          "changes": [],
+          "done": 10127
+        },
+        "p-5-1": {
+          "start": 745,
+          "urgency": 3,
+          "changes": [
+            [
+              1343,
+              1
+            ]
+          ],
+          "done": 3137
+        },
+        "p-5-2": {
+          "start": 745,
+          "urgency": 3,
+          "changes": [
+            [
+              1343,
+              1
+            ]
+          ],
+          "done": 3142
+        },
+        "p-5-3": {
+          "start": 745,
+          "urgency": 3,
+          "changes": [
+            [
+              1343,
+              1
+            ]
+          ],
+          "done": 3142
+        },
+        "p-5-4": {
+          "start": 745,
+          "urgency": 3,
+          "changes": [
+            [
+              1343,
+              1
+            ]
+          ],
+          "done": 3142
+        },
+        "p-5-5": {
+          "start": 745,
+          "urgency": 3,
+          "changes": [
+            [
+              1343,
+              1
+            ]
+          ],
+          "done": 3146
+        },
+        "p-5-6": {
+          "start": 745,
+          "urgency": 3,
+          "changes": [
+            [
+              1343,
+              1
+            ]
+          ],
+          "done": 3146
+        },
+        "p-6-1": {
+          "start": 745,
+          "urgency": 3,
+          "changes": [
+            [
+              1343,
+              1
+            ]
+          ],
+          "done": 3146
+        },
+        "p-6-2": {
+          "start": 746,
+          "urgency": 3,
+          "changes": [
+            [
+              1343,
+              1
+            ]
+          ],
+          "done": 3146
+        },
+        "p-6-3": {
+          "start": 746,
+          "urgency": 3,
+          "changes": [],
+          "done": 10127
+        },
+        "p-6-4": {
+          "start": 746,
+          "urgency": 3,
+          "changes": [],
+          "done": 10131
+        },
+        "p-6-5": {
+          "start": 746,
+          "urgency": 3,
+          "changes": [],
+          "done": 10131
+        },
+        "p-6-6": {
+          "start": 746,
+          "urgency": 3,
+          "changes": [],
+          "done": 10131
+        },
+        "p-7-1": {
+          "start": 746,
+          "urgency": 3,
+          "changes": [],
+          "done": 10131
+        },
+        "p-7-2": {
+          "start": 746,
+          "urgency": 3,
+          "changes": [],
+          "done": 10131
+        },
+        "p-7-3": {
+          "start": 746,
+          "urgency": 3,
+          "changes": [],
+          "done": 10136
+        },
+        "p-7-4": {
+          "start": 747,
+          "urgency": 3,
+          "changes": [],
+          "done": 10136
+        },
+        "p-7-5": {
+          "start": 747,
+          "urgency": 3,
+          "changes": [],
+          "done": 10136
+        },
+        "p-7-6": {
+          "start": 747,
+          "urgency": 3,
+          "changes": [],
+          "done": 10136
+        }
+      },
+      "frameTimes": [
+        5,
+        17,
+        217,
+        232,
+        249,
+        265,
+        749,
+        765,
+        778,
+        797,
+        813,
+        830,
+        848,
+        863,
+        881,
+        896,
+        914,
+        930,
+        947,
+        964,
+        982,
+        3153,
+        3166,
+        10149
+      ]
+    },
+    {
+      "net": "slow",
+      "sched": "priority",
+      "entry": "mid",
+      "cond": "E2",
+      "rep": 1,
+      "protocol": "h2",
+      "summary": {
+        "fcp": 768,
+        "firstFrame": [
+          757,
+          0
+        ],
+        "parsed": {
+          "section-1": 200.80000001192093,
+          "section-2": 206.9000000357628,
+          "section-3": 211.69999998807907,
+          "section-4": 215,
+          "section-5": 219.4000000357628,
+          "section-6": 223.80000001192093,
+          "section-7": 228.60000002384186,
+          "section-8": 237.80000001192093,
+          "section-9": 242.4000000357628,
+          "section-10": 246.69999998807907,
+          "page-end": 746.8000000119209
+        },
+        "url": "https://localhost:4433/shop?cond=E2&net=slow&sched=priority&at=5&cards=lazy&tail=100#section-5",
+        "scrollY": 3422,
+        "viewport": [
+          390,
+          844
+        ],
+        "effectiveType": "4g",
+        "visible": [
+          "p-5-1",
+          "p-5-2",
+          "p-5-3",
+          "p-5-4",
+          "p-5-5",
+          "p-5-6",
+          "p-6-1",
+          "p-6-2"
+        ],
+        "viewportDone": 9432,
+        "viewportFirst": 9404,
+        "heroShown": 10152,
+        "lcp": {
+          "t": 9404,
+          "id": "p-5-1"
+        },
+        "firstScroll": 763,
+        "requested": 43,
+        "requestedBytes": 1880000,
+        "scroll": [
+          [
+            757,
+            0
+          ],
+          [
+            763,
+            3422
+          ]
+        ]
+      },
+      "images": {
+        "hero": {
+          "initial": "Low",
+          "start": 194,
+          "sent": 195,
+          "end": 10144,
+          "changes": [
+            [
+              756,
+              "High"
+            ]
+          ]
+        },
+        "p-1-1": {
+          "initial": "Low",
+          "start": 758,
+          "sent": 758,
+          "end": 9348,
+          "changes": []
+        },
+        "p-1-2": {
+          "initial": "Low",
+          "start": 758,
+          "sent": 758,
+          "end": 9357,
+          "changes": []
+        },
+        "p-1-3": {
+          "initial": "Low",
+          "start": 758,
+          "sent": 759,
+          "end": 9403,
+          "changes": []
+        },
+        "p-1-4": {
+          "initial": "Low",
+          "start": 758,
+          "sent": 759,
+          "end": 9408,
+          "changes": []
+        },
+        "p-1-5": {
+          "initial": "Low",
+          "start": 758,
+          "sent": 759,
+          "end": 9418,
+          "changes": []
+        },
+        "p-1-6": {
+          "initial": "Low",
+          "start": 758,
+          "sent": 759,
+          "end": 9422,
+          "changes": []
+        },
+        "p-2-1": {
+          "initial": "Low",
+          "start": 758,
+          "sent": 759,
+          "end": 9426,
+          "changes": []
+        },
+        "p-2-2": {
+          "initial": "Low",
+          "start": 758,
+          "sent": 759,
+          "end": 9431,
+          "changes": []
+        },
+        "p-2-3": {
+          "initial": "Low",
+          "start": 758,
+          "sent": 759,
+          "end": 9436,
+          "changes": []
+        },
+        "p-2-4": {
+          "initial": "Low",
+          "start": 758,
+          "sent": 759,
+          "end": 9440,
+          "changes": []
+        },
+        "p-2-5": {
+          "initial": "Low",
+          "start": 758,
+          "sent": 759,
+          "end": 9441,
+          "changes": []
+        },
+        "p-2-6": {
+          "initial": "Low",
+          "start": 758,
+          "sent": 760,
+          "end": 9445,
+          "changes": []
+        },
+        "p-3-1": {
+          "initial": "Low",
+          "start": 758,
+          "sent": 760,
+          "end": 9450,
+          "changes": []
+        },
+        "p-3-2": {
+          "initial": "Low",
+          "start": 758,
+          "sent": 760,
+          "end": 9450,
+          "changes": []
+        },
+        "p-3-3": {
+          "initial": "Low",
+          "start": 764,
+          "sent": 764,
+          "end": 9458,
+          "changes": []
+        },
+        "p-3-4": {
+          "initial": "Low",
+          "start": 764,
+          "sent": 764,
+          "end": 9463,
+          "changes": []
+        },
+        "p-3-5": {
+          "initial": "Low",
+          "start": 764,
+          "sent": 764,
+          "end": 9463,
+          "changes": []
+        },
+        "p-3-6": {
+          "initial": "Low",
+          "start": 764,
+          "sent": 764,
+          "end": 9463,
+          "changes": []
+        },
+        "p-4-1": {
+          "initial": "Low",
+          "start": 764,
+          "sent": 765,
+          "end": 9468,
+          "changes": []
+        },
+        "p-4-2": {
+          "initial": "Low",
+          "start": 764,
+          "sent": 765,
+          "end": 9468,
+          "changes": []
+        },
+        "p-4-3": {
+          "initial": "Low",
+          "start": 764,
+          "sent": 765,
+          "end": 9468,
+          "changes": []
+        },
+        "p-4-4": {
+          "initial": "Low",
+          "start": 764,
+          "sent": 765,
+          "end": 9473,
+          "changes": []
+        },
+        "p-4-5": {
+          "initial": "Low",
+          "start": 764,
+          "sent": 765,
+          "end": 9473,
+          "changes": []
+        },
+        "p-4-6": {
+          "initial": "Low",
+          "start": 764,
+          "sent": 765,
+          "end": 9473,
+          "changes": []
+        },
+        "p-5-1": {
+          "initial": "Low",
+          "start": 764,
+          "sent": 765,
+          "end": 9390,
+          "changes": [
+            [
+              9364,
+              "High"
+            ]
+          ]
+        },
+        "p-5-2": {
+          "initial": "Low",
+          "start": 764,
+          "sent": 765,
+          "end": 9394,
+          "changes": [
+            [
+              9364,
+              "High"
+            ]
+          ]
+        },
+        "p-5-3": {
+          "initial": "Low",
+          "start": 764,
+          "sent": 765,
+          "end": 9394,
+          "changes": [
+            [
+              9364,
+              "High"
+            ]
+          ]
+        },
+        "p-5-4": {
+          "initial": "Low",
+          "start": 764,
+          "sent": 765,
+          "end": 9394,
+          "changes": [
+            [
+              9364,
+              "High"
+            ]
+          ]
+        },
+        "p-5-5": {
+          "initial": "Low",
+          "start": 764,
+          "sent": 766,
+          "end": 9399,
+          "changes": [
+            [
+              9364,
+              "High"
+            ]
+          ]
+        },
+        "p-5-6": {
+          "initial": "Low",
+          "start": 764,
+          "sent": 766,
+          "end": 9399,
+          "changes": [
+            [
+              9364,
+              "High"
+            ]
+          ]
+        },
+        "p-6-1": {
+          "initial": "Low",
+          "start": 764,
+          "sent": 766,
+          "end": 9399,
+          "changes": [
+            [
+              9364,
+              "High"
+            ]
+          ]
+        },
+        "p-6-2": {
+          "initial": "Low",
+          "start": 764,
+          "sent": 766,
+          "end": 9399,
+          "changes": [
+            [
+              9364,
+              "High"
+            ]
+          ]
+        },
+        "p-6-3": {
+          "initial": "Low",
+          "start": 764,
+          "sent": 766,
+          "end": 9504,
+          "changes": []
+        },
+        "p-6-4": {
+          "initial": "Low",
+          "start": 764,
+          "sent": 766,
+          "end": 9504,
+          "changes": []
+        },
+        "p-6-5": {
+          "initial": "Low",
+          "start": 764,
+          "sent": 766,
+          "end": 9507,
+          "changes": []
+        },
+        "p-6-6": {
+          "initial": "Low",
+          "start": 764,
+          "sent": 766,
+          "end": 9512,
+          "changes": []
+        },
+        "p-7-1": {
+          "initial": "Low",
+          "start": 764,
+          "sent": 766,
+          "end": 9512,
+          "changes": []
+        },
+        "p-7-2": {
+          "initial": "Low",
+          "start": 764,
+          "sent": 766,
+          "end": 9517,
+          "changes": []
+        },
+        "p-7-3": {
+          "initial": "Low",
+          "start": 764,
+          "sent": 767,
+          "end": 9517,
+          "changes": []
+        },
+        "p-7-4": {
+          "initial": "Low",
+          "start": 764,
+          "sent": 767,
+          "end": 9517,
+          "changes": []
+        },
+        "p-7-5": {
+          "initial": "Low",
+          "start": 764,
+          "sent": 767,
+          "end": 9521,
+          "changes": []
+        },
+        "p-7-6": {
+          "initial": "Low",
+          "start": 764,
+          "sent": 767,
+          "end": 9521,
+          "changes": []
+        }
+      },
+      "server": {
+        "hero": {
+          "start": 194,
+          "urgency": 3,
+          "changes": [],
+          "done": 10142
+        },
+        "p-1-1": {
+          "start": 757,
+          "urgency": 3,
+          "changes": [],
+          "done": 9346
+        },
+        "p-1-2": {
+          "start": 757,
+          "urgency": 3,
+          "changes": [],
+          "done": 9355
+        },
+        "p-1-3": {
+          "start": 757,
+          "urgency": 3,
+          "changes": [],
+          "done": 9402
+        },
+        "p-1-4": {
+          "start": 757,
+          "urgency": 3,
+          "changes": [],
+          "done": 9406
+        },
+        "p-1-5": {
+          "start": 757,
+          "urgency": 3,
+          "changes": [],
+          "done": 9416
+        },
+        "p-1-6": {
+          "start": 758,
+          "urgency": 3,
+          "changes": [],
+          "done": 9420
+        },
+        "p-2-1": {
+          "start": 758,
+          "urgency": 3,
+          "changes": [],
+          "done": 9424
+        },
+        "p-2-2": {
+          "start": 758,
+          "urgency": 3,
+          "changes": [],
+          "done": 9429
+        },
+        "p-2-3": {
+          "start": 758,
+          "urgency": 3,
+          "changes": [],
+          "done": 9434
+        },
+        "p-2-4": {
+          "start": 758,
+          "urgency": 3,
+          "changes": [],
+          "done": 9439
+        },
+        "p-2-5": {
+          "start": 758,
+          "urgency": 3,
+          "changes": [],
+          "done": 9439
+        },
+        "p-2-6": {
+          "start": 758,
+          "urgency": 3,
+          "changes": [],
+          "done": 9444
+        },
+        "p-3-1": {
+          "start": 758,
+          "urgency": 3,
+          "changes": [],
+          "done": 9448
+        },
+        "p-3-2": {
+          "start": 758,
+          "urgency": 3,
+          "changes": [],
+          "done": 9448
+        },
+        "p-3-3": {
+          "start": 763,
+          "urgency": 3,
+          "changes": [],
+          "done": 9457
+        },
+        "p-3-4": {
+          "start": 763,
+          "urgency": 3,
+          "changes": [],
+          "done": 9461
+        },
+        "p-3-5": {
+          "start": 763,
+          "urgency": 3,
+          "changes": [],
+          "done": 9461
+        },
+        "p-3-6": {
+          "start": 763,
+          "urgency": 3,
+          "changes": [],
+          "done": 9461
+        },
+        "p-4-1": {
+          "start": 763,
+          "urgency": 3,
+          "changes": [],
+          "done": 9466
+        },
+        "p-4-2": {
+          "start": 763,
+          "urgency": 3,
+          "changes": [],
+          "done": 9466
+        },
+        "p-4-3": {
+          "start": 763,
+          "urgency": 3,
+          "changes": [],
+          "done": 9466
+        },
+        "p-4-4": {
+          "start": 763,
+          "urgency": 3,
+          "changes": [],
+          "done": 9471
+        },
+        "p-4-5": {
+          "start": 764,
+          "urgency": 3,
+          "changes": [],
+          "done": 9471
+        },
+        "p-4-6": {
+          "start": 764,
+          "urgency": 3,
+          "changes": [],
+          "done": 9471
+        },
+        "p-5-1": {
+          "start": 764,
+          "urgency": 3,
+          "changes": [
+            [
+              9364,
+              1
+            ]
+          ],
+          "done": 9388
+        },
+        "p-5-2": {
+          "start": 764,
+          "urgency": 3,
+          "changes": [
+            [
+              9364,
+              1
+            ]
+          ],
+          "done": 9392
+        },
+        "p-5-3": {
+          "start": 764,
+          "urgency": 3,
+          "changes": [
+            [
+              9364,
+              1
+            ]
+          ],
+          "done": 9392
+        },
+        "p-5-4": {
+          "start": 764,
+          "urgency": 3,
+          "changes": [
+            [
+              9364,
+              1
+            ]
+          ],
+          "done": 9392
+        },
+        "p-5-5": {
+          "start": 764,
+          "urgency": 3,
+          "changes": [
+            [
+              9364,
+              1
+            ]
+          ],
+          "done": 9397
+        },
+        "p-5-6": {
+          "start": 764,
+          "urgency": 3,
+          "changes": [
+            [
+              9364,
+              1
+            ]
+          ],
+          "done": 9397
+        },
+        "p-6-1": {
+          "start": 764,
+          "urgency": 3,
+          "changes": [
+            [
+              9364,
+              1
+            ]
+          ],
+          "done": 9397
+        },
+        "p-6-2": {
+          "start": 764,
+          "urgency": 3,
+          "changes": [
+            [
+              9364,
+              1
+            ]
+          ],
+          "done": 9397
+        },
+        "p-6-3": {
+          "start": 764,
+          "urgency": 3,
+          "changes": [],
+          "done": 9502
+        },
+        "p-6-4": {
+          "start": 765,
+          "urgency": 3,
+          "changes": [],
+          "done": 9502
+        },
+        "p-6-5": {
+          "start": 765,
+          "urgency": 3,
+          "changes": [],
+          "done": 9506
+        },
+        "p-6-6": {
+          "start": 765,
+          "urgency": 3,
+          "changes": [],
+          "done": 9510
+        },
+        "p-7-1": {
+          "start": 765,
+          "urgency": 3,
+          "changes": [],
+          "done": 9510
+        },
+        "p-7-2": {
+          "start": 765,
+          "urgency": 3,
+          "changes": [],
+          "done": 9515
+        },
+        "p-7-3": {
+          "start": 765,
+          "urgency": 3,
+          "changes": [],
+          "done": 9515
+        },
+        "p-7-4": {
+          "start": 765,
+          "urgency": 3,
+          "changes": [],
+          "done": 9515
+        },
+        "p-7-5": {
+          "start": 765,
+          "urgency": 3,
+          "changes": [],
+          "done": 9519
+        },
+        "p-7-6": {
+          "start": 765,
+          "urgency": 3,
+          "changes": [],
+          "done": 9519
+        }
+      },
+      "frameTimes": [
+        4,
+        767,
+        784,
+        799,
+        1283,
+        1300,
+        1317,
+        1333,
+        1350,
+        1366,
+        1383,
+        1400,
+        1416,
+        1433,
+        1449,
+        1467,
+        1483,
+        9402,
+        9416,
+        9517
+      ]
+    },
+    {
+      "net": "slow",
+      "sched": "priority",
+      "entry": "mid",
+      "cond": "E3",
+      "rep": 1,
+      "protocol": "h2",
+      "summary": {
+        "fcp": 780,
+        "firstFrame": [
+          765,
+          0
+        ],
+        "parsed": {
+          "section-1": 198.29999995231628,
+          "section-2": 203,
+          "section-3": 207.5,
+          "section-4": 216.69999998807907,
+          "section-5": 221.39999997615814,
+          "section-6": 226.0999999642372,
+          "section-7": 230.89999997615814,
+          "section-8": 234.29999995231628,
+          "section-9": 238.89999997615814,
+          "section-10": 248.0999999642372,
+          "page-end": 744.5999999642372
+        },
+        "url": "https://localhost:4433/shop?cond=E3&net=slow&sched=priority&at=5&cards=lazy&tail=100#section-5",
+        "scrollY": 3422,
+        "viewport": [
+          390,
+          844
+        ],
+        "effectiveType": "4g",
+        "visible": [
+          "p-5-1",
+          "p-5-2",
+          "p-5-3",
+          "p-5-4",
+          "p-5-5",
+          "p-5-6",
+          "p-6-1",
+          "p-6-2"
+        ],
+        "viewportDone": 2364,
+        "viewportFirst": 2348,
+        "heroShown": 10160,
+        "lcp": {
+          "t": 2348,
+          "id": "p-5-1"
+        },
+        "firstScroll": 775,
+        "requested": 43,
+        "requestedBytes": 1880000,
+        "scroll": [
+          [
+            765,
+            0
+          ],
+          [
+            775,
+            3422
+          ]
+        ]
+      },
+      "images": {
+        "p-5-1": {
+          "initial": "High",
+          "start": 190,
+          "sent": 191,
+          "end": 2337,
+          "changes": []
+        },
+        "p-5-2": {
+          "initial": "High",
+          "start": 191,
+          "sent": 191,
+          "end": 2341,
+          "changes": []
+        },
+        "p-5-3": {
+          "initial": "High",
+          "start": 191,
+          "sent": 191,
+          "end": 2341,
+          "changes": []
+        },
+        "p-5-4": {
+          "initial": "High",
+          "start": 191,
+          "sent": 191,
+          "end": 2341,
+          "changes": []
+        },
+        "p-5-5": {
+          "initial": "High",
+          "start": 191,
+          "sent": 191,
+          "end": 2346,
+          "changes": []
+        },
+        "p-5-6": {
+          "initial": "High",
+          "start": 191,
+          "sent": 192,
+          "end": 2346,
+          "changes": []
+        },
+        "p-6-1": {
+          "initial": "High",
+          "start": 191,
+          "sent": 192,
+          "end": 2346,
+          "changes": []
+        },
+        "p-6-2": {
+          "initial": "High",
+          "start": 191,
+          "sent": 192,
+          "end": 2346,
+          "changes": []
+        },
+        "hero": {
+          "initial": "Low",
+          "start": 194,
+          "sent": 194,
+          "end": 10144,
+          "changes": [
+            [
+              764,
+              "High"
+            ]
+          ]
+        },
+        "p-1-1": {
+          "initial": "Low",
+          "start": 767,
+          "sent": 768,
+          "end": 9238,
+          "changes": []
+        },
+        "p-1-2": {
+          "initial": "Low",
+          "start": 767,
+          "sent": 768,
+          "end": 9247,
+          "changes": []
+        },
+        "p-1-3": {
+          "initial": "Low",
+          "start": 767,
+          "sent": 768,
+          "end": 9252,
+          "changes": []
+        },
+        "p-1-4": {
+          "initial": "Low",
+          "start": 767,
+          "sent": 768,
+          "end": 9257,
+          "changes": []
+        },
+        "p-1-5": {
+          "initial": "Low",
+          "start": 767,
+          "sent": 768,
+          "end": 9262,
+          "changes": []
+        },
+        "p-1-6": {
+          "initial": "Low",
+          "start": 767,
+          "sent": 769,
+          "end": 9270,
+          "changes": []
+        },
+        "p-2-1": {
+          "initial": "Low",
+          "start": 767,
+          "sent": 769,
+          "end": 9275,
+          "changes": []
+        },
+        "p-2-2": {
+          "initial": "Low",
+          "start": 767,
+          "sent": 769,
+          "end": 9279,
+          "changes": []
+        },
+        "p-2-3": {
+          "initial": "Low",
+          "start": 767,
+          "sent": 769,
+          "end": 9283,
+          "changes": []
+        },
+        "p-2-4": {
+          "initial": "Low",
+          "start": 767,
+          "sent": 769,
+          "end": 9284,
+          "changes": []
+        },
+        "p-2-5": {
+          "initial": "Low",
+          "start": 767,
+          "sent": 769,
+          "end": 9288,
+          "changes": []
+        },
+        "p-2-6": {
+          "initial": "Low",
+          "start": 767,
+          "sent": 770,
+          "end": 9288,
+          "changes": []
+        },
+        "p-3-1": {
+          "initial": "Low",
+          "start": 767,
+          "sent": 770,
+          "end": 9293,
+          "changes": []
+        },
+        "p-3-2": {
+          "initial": "Low",
+          "start": 767,
+          "sent": 770,
+          "end": 9298,
+          "changes": []
+        },
+        "p-3-3": {
+          "initial": "Low",
+          "start": 776,
+          "sent": 776,
+          "end": 9302,
+          "changes": []
+        },
+        "p-3-4": {
+          "initial": "Low",
+          "start": 776,
+          "sent": 776,
+          "end": 9307,
+          "changes": []
+        },
+        "p-3-5": {
+          "initial": "Low",
+          "start": 776,
+          "sent": 776,
+          "end": 9307,
+          "changes": []
+        },
+        "p-3-6": {
+          "initial": "Low",
+          "start": 776,
+          "sent": 776,
+          "end": 9311,
+          "changes": []
+        },
+        "p-4-1": {
+          "initial": "Low",
+          "start": 776,
+          "sent": 777,
+          "end": 9312,
+          "changes": []
+        },
+        "p-4-2": {
+          "initial": "Low",
+          "start": 776,
+          "sent": 777,
+          "end": 9316,
+          "changes": []
+        },
+        "p-4-3": {
+          "initial": "Low",
+          "start": 776,
+          "sent": 777,
+          "end": 9321,
+          "changes": []
+        },
+        "p-4-4": {
+          "initial": "Low",
+          "start": 776,
+          "sent": 777,
+          "end": 9326,
+          "changes": []
+        },
+        "p-4-5": {
+          "initial": "Low",
+          "start": 776,
+          "sent": 778,
+          "end": 9326,
+          "changes": []
+        },
+        "p-4-6": {
+          "initial": "Low",
+          "start": 776,
+          "sent": 778,
+          "end": 9330,
+          "changes": []
+        },
+        "p-6-3": {
+          "initial": "Low",
+          "start": 777,
+          "sent": 778,
+          "end": 9335,
+          "changes": []
+        },
+        "p-6-4": {
+          "initial": "Low",
+          "start": 777,
+          "sent": 778,
+          "end": 9340,
+          "changes": []
+        },
+        "p-6-5": {
+          "initial": "Low",
+          "start": 777,
+          "sent": 778,
+          "end": 9340,
+          "changes": []
+        },
+        "p-6-6": {
+          "initial": "Low",
+          "start": 777,
+          "sent": 778,
+          "end": 9344,
+          "changes": []
+        },
+        "p-7-1": {
+          "initial": "Low",
+          "start": 777,
+          "sent": 778,
+          "end": 9349,
+          "changes": []
+        },
+        "p-7-2": {
+          "initial": "Low",
+          "start": 777,
+          "sent": 779,
+          "end": 9349,
+          "changes": []
+        },
+        "p-7-3": {
+          "initial": "Low",
+          "start": 777,
+          "sent": 779,
+          "end": 9349,
+          "changes": []
+        },
+        "p-7-4": {
+          "initial": "Low",
+          "start": 777,
+          "sent": 779,
+          "end": 9353,
+          "changes": []
+        },
+        "p-7-5": {
+          "initial": "Low",
+          "start": 777,
+          "sent": 779,
+          "end": 9353,
+          "changes": []
+        },
+        "p-7-6": {
+          "initial": "Low",
+          "start": 777,
+          "sent": 779,
+          "end": 9353,
+          "changes": []
+        }
+      },
+      "server": {
+        "p-5-1": {
+          "start": 190,
+          "urgency": 1,
+          "changes": [],
+          "done": 2335
+        },
+        "p-5-2": {
+          "start": 190,
+          "urgency": 1,
+          "changes": [],
+          "done": 2339
+        },
+        "p-5-3": {
+          "start": 190,
+          "urgency": 1,
+          "changes": [],
+          "done": 2339
+        },
+        "p-5-4": {
+          "start": 190,
+          "urgency": 1,
+          "changes": [],
+          "done": 2339
+        },
+        "p-5-5": {
+          "start": 190,
+          "urgency": 1,
+          "changes": [],
+          "done": 2344
+        },
+        "p-5-6": {
+          "start": 190,
+          "urgency": 1,
+          "changes": [],
+          "done": 2344
+        },
+        "p-6-1": {
+          "start": 190,
+          "urgency": 1,
+          "changes": [],
+          "done": 2344
+        },
+        "p-6-2": {
+          "start": 190,
+          "urgency": 1,
+          "changes": [],
+          "done": 2344
+        },
+        "hero": {
+          "start": 193,
+          "urgency": 3,
+          "changes": [],
+          "done": 10142
+        },
+        "p-1-1": {
+          "start": 767,
+          "urgency": 3,
+          "changes": [],
+          "done": 9236
+        },
+        "p-1-2": {
+          "start": 767,
+          "urgency": 3,
+          "changes": [],
+          "done": 9245
+        },
+        "p-1-3": {
+          "start": 767,
+          "urgency": 3,
+          "changes": [],
+          "done": 9251
+        },
+        "p-1-4": {
+          "start": 767,
+          "urgency": 3,
+          "changes": [],
+          "done": 9256
+        },
+        "p-1-5": {
+          "start": 767,
+          "urgency": 3,
+          "changes": [],
+          "done": 9260
+        },
+        "p-1-6": {
+          "start": 767,
+          "urgency": 3,
+          "changes": [],
+          "done": 9269
+        },
+        "p-2-1": {
+          "start": 767,
+          "urgency": 3,
+          "changes": [],
+          "done": 9273
+        },
+        "p-2-2": {
+          "start": 768,
+          "urgency": 3,
+          "changes": [],
+          "done": 9277
+        },
+        "p-2-3": {
+          "start": 768,
+          "urgency": 3,
+          "changes": [],
+          "done": 9282
+        },
+        "p-2-4": {
+          "start": 768,
+          "urgency": 3,
+          "changes": [],
+          "done": 9282
+        },
+        "p-2-5": {
+          "start": 768,
+          "urgency": 3,
+          "changes": [],
+          "done": 9287
+        },
+        "p-2-6": {
+          "start": 768,
+          "urgency": 3,
+          "changes": [],
+          "done": 9287
+        },
+        "p-3-1": {
+          "start": 768,
+          "urgency": 3,
+          "changes": [],
+          "done": 9292
+        },
+        "p-3-2": {
+          "start": 769,
+          "urgency": 3,
+          "changes": [],
+          "done": 9296
+        },
+        "p-3-3": {
+          "start": 775,
+          "urgency": 3,
+          "changes": [],
+          "done": 9300
+        },
+        "p-3-4": {
+          "start": 775,
+          "urgency": 3,
+          "changes": [],
+          "done": 9305
+        },
+        "p-3-5": {
+          "start": 775,
+          "urgency": 3,
+          "changes": [],
+          "done": 9305
+        },
+        "p-3-6": {
+          "start": 776,
+          "urgency": 3,
+          "changes": [],
+          "done": 9310
+        },
+        "p-4-1": {
+          "start": 776,
+          "urgency": 3,
+          "changes": [],
+          "done": 9310
+        },
+        "p-4-2": {
+          "start": 776,
+          "urgency": 3,
+          "changes": [],
+          "done": 9315
+        },
+        "p-4-3": {
+          "start": 776,
+          "urgency": 3,
+          "changes": [],
+          "done": 9319
+        },
+        "p-4-4": {
+          "start": 776,
+          "urgency": 3,
+          "changes": [],
+          "done": 9324
+        },
+        "p-4-5": {
+          "start": 777,
+          "urgency": 3,
+          "changes": [],
+          "done": 9324
+        },
+        "p-4-6": {
+          "start": 777,
+          "urgency": 3,
+          "changes": [],
+          "done": 9329
+        },
+        "p-6-3": {
+          "start": 777,
+          "urgency": 3,
+          "changes": [],
+          "done": 9333
+        },
+        "p-6-4": {
+          "start": 777,
+          "urgency": 3,
+          "changes": [],
+          "done": 9338
+        },
+        "p-6-5": {
+          "start": 777,
+          "urgency": 3,
+          "changes": [],
+          "done": 9338
+        },
+        "p-6-6": {
+          "start": 777,
+          "urgency": 3,
+          "changes": [],
+          "done": 9342
+        },
+        "p-7-1": {
+          "start": 777,
+          "urgency": 3,
+          "changes": [],
+          "done": 9347
+        },
+        "p-7-2": {
+          "start": 778,
+          "urgency": 3,
+          "changes": [],
+          "done": 9347
+        },
+        "p-7-3": {
+          "start": 778,
+          "urgency": 3,
+          "changes": [],
+          "done": 9347
+        },
+        "p-7-4": {
+          "start": 778,
+          "urgency": 3,
+          "changes": [],
+          "done": 9352
+        },
+        "p-7-5": {
+          "start": 778,
+          "urgency": 3,
+          "changes": [],
+          "done": 9352
+        },
+        "p-7-6": {
+          "start": 778,
+          "urgency": 3,
+          "changes": [],
+          "done": 9352
+        }
+      },
+      "frameTimes": [
+        11,
+        25,
+        778,
+        793,
+        810,
+        827,
+        1294,
+        1310,
+        1327,
+        1344,
+        1361,
+        1377,
+        1395,
+        1410,
+        1427,
+        1444,
+        1460,
+        1477,
+        1494,
+        2349,
+        2361,
+        9346,
+        9360
+      ]
+    }
+  ]
+}

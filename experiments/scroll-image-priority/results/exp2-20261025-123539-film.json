@@ -1,0 +1,1026 @@
+{
+  "meta": {
+    "name": "exp2",
+    "date": "2026-10-25T12:35:39.917Z",
+    "product": "Chrome/155.0.8059.86",
+    "repeat": 1,
+    "cards": "lazy",
+    "tail": 100
+  },
+  "rows": [
+    {
+      "net": "slow",
+      "sched": "priority",
+      "entry": "top",
+      "cond": "A",
+      "n": 1,
+      "viewportDone": 4552,
+      "viewportSeen": 4552,
+      "viewportSeenRange": "4552–4552",
+      "topVisible": null,
+      "viewportFirst": 1148,
+      "heroShown": 4552,
+      "lcp": 4552,
+      "lcpId": "hero",
+      "firstScroll": null,
+      "fcp": 220,
+      "topPainted": "-",
+      "targetParsed": 208,
+      "endParsed": 736,
+      "topRequested": 12,
+      "requested": 15,
+      "kb": 760,
+      "heroPriority": "Low",
+      "targetStart": 203,
+      "targetSent": 204,
+      "targetPriority": "Low",
+      "targetBoost": 209,
+      "targetServerHigh": 209,
+      "serverHighRate": "2/4"
+    },
+    {
+      "net": "slow",
+      "sched": "priority",
+      "entry": "top",
+      "cond": "B",
+      "n": 1,
+      "viewportDone": 4544,
+      "viewportSeen": 4544,
+      "viewportSeenRange": "4544–4544",
+      "topVisible": null,
+      "viewportFirst": 1144,
+      "heroShown": 1956,
+      "lcp": 1956,
+      "lcpId": "hero",
+      "firstScroll": null,
+      "fcp": 208,
+      "topPainted": "-",
+      "targetParsed": 211,
+      "endParsed": 744,
+      "topRequested": 12,
+      "requested": 15,
+      "kb": 760,
+      "heroPriority": "High",
+      "targetStart": 195,
+      "targetSent": 196,
+      "targetPriority": "Low",
+      "targetBoost": 205,
+      "targetServerHigh": 204,
+      "serverHighRate": "1/4"
+    },
+    {
+      "net": "slow",
+      "sched": "priority",
+      "entry": "top",
+      "cond": "E3",
+      "n": 1,
+      "viewportDone": 4556,
+      "viewportSeen": 4556,
+      "viewportSeenRange": "4556–4556",
+      "topVisible": null,
+      "viewportFirst": 1756,
+      "heroShown": 1756,
+      "lcp": 1756,
+      "lcpId": "hero",
+      "firstScroll": null,
+      "fcp": 220,
+      "topPainted": "-",
+      "targetParsed": 220,
+      "endParsed": 747,
+      "topRequested": 12,
+      "requested": 15,
+      "kb": 760,
+      "heroPriority": "High",
+      "targetStart": 210,
+      "targetSent": 211,
+      "targetPriority": "Low",
+      "targetBoost": 226,
+      "targetServerHigh": null,
+      "serverHighRate": "0/4"
+    }
+  ],
+  "runs": [
+    {
+      "net": "slow",
+      "sched": "priority",
+      "entry": "top",
+      "cond": "A",
+      "rep": 1,
+      "protocol": "h2",
+      "summary": {
+        "fcp": 220,
+        "firstFrame": [
+          203,
+          0
+        ],
+        "parsed": {
+          "section-1": 189,
+          "section-2": 204,
+          "section-3": 204.30000001192093,
+          "section-4": 204.30000001192093,
+          "section-5": 208.0999999642372,
+          "section-6": 215.19999998807907,
+          "section-7": 219.80000001192093,
+          "section-8": 224,
+          "section-9": 228.69999998807907,
+          "section-10": 234.39999997615814,
+          "page-end": 735.5999999642372
+        },
+        "url": "https://localhost:4433/shop?cond=A&net=slow&sched=priority&at=5&cards=lazy&tail=100",
+        "scrollY": 0,
+        "viewport": [
+          390,
+          844
+        ],
+        "effectiveType": "4g",
+        "visible": [
+          "hero",
+          "p-1-1",
+          "p-1-2",
+          "p-1-3",
+          "p-1-4"
+        ],
+        "viewportDone": 4552,
+        "viewportFirst": 1148,
+        "heroShown": 4552,
+        "lcp": {
+          "t": 4552,
+          "id": "hero"
+        },
+        "firstScroll": null,
+        "requested": 15,
+        "requestedBytes": 760000,
+        "scroll": [
+          [
+            203,
+            0
+          ]
+        ]
+      },
+      "images": {
+        "hero": {
+          "initial": "Low",
+          "start": 185,
+          "sent": 186,
+          "end": 4534,
+          "changes": [
+            [
+              202,
+              "High"
+            ]
+          ]
+        },
+        "p-1-1": {
+          "initial": "Low",
+          "start": 203,
+          "sent": 204,
+          "end": 3719,
+          "changes": [
+            [
+              209,
+              "High"
+            ]
+          ]
+        },
+        "p-1-2": {
+          "initial": "Low",
+          "start": 203,
+          "sent": 204,
+          "end": 1135,
+          "changes": [
+            [
+              209,
+              "High"
+            ]
+          ]
+        },
+        "p-1-3": {
+          "initial": "Low",
+          "start": 203,
+          "sent": 204,
+          "end": 3723,
+          "changes": [
+            [
+              209,
+              "High"
+            ]
+          ]
+        },
+        "p-1-4": {
+          "initial": "Low",
+          "start": 203,
+          "sent": 204,
+          "end": 1135,
+          "changes": [
+            [
+              209,
+              "High"
+            ]
+          ]
+        },
+        "p-1-5": {
+          "initial": "Low",
+          "start": 203,
+          "sent": 205,
+          "end": 3728,
+          "changes": []
+        },
+        "p-1-6": {
+          "initial": "Low",
+          "start": 203,
+          "sent": 205,
+          "end": 3728,
+          "changes": []
+        },
+        "p-2-1": {
+          "initial": "Low",
+          "start": 203,
+          "sent": 205,
+          "end": 3728,
+          "changes": []
+        },
+        "p-2-2": {
+          "initial": "Low",
+          "start": 204,
+          "sent": 205,
+          "end": 3732,
+          "changes": []
+        },
+        "p-2-3": {
+          "initial": "Low",
+          "start": 204,
+          "sent": 205,
+          "end": 3732,
+          "changes": []
+        },
+        "p-2-4": {
+          "initial": "Low",
+          "start": 210,
+          "sent": 210,
+          "end": 3736,
+          "changes": []
+        },
+        "p-2-5": {
+          "initial": "Low",
+          "start": 210,
+          "sent": 210,
+          "end": 3736,
+          "changes": []
+        },
+        "p-2-6": {
+          "initial": "Low",
+          "start": 210,
+          "sent": 211,
+          "end": 3737,
+          "changes": []
+        },
+        "p-3-1": {
+          "initial": "Low",
+          "start": 210,
+          "sent": 211,
+          "end": 3737,
+          "changes": []
+        },
+        "p-3-2": {
+          "initial": "Low",
+          "start": 210,
+          "sent": 211,
+          "end": 3737,
+          "changes": []
+        }
+      },
+      "server": {
+        "hero": {
+          "start": 185,
+          "urgency": 3,
+          "changes": [],
+          "done": 4532
+        },
+        "p-1-1": {
+          "start": 205,
+          "urgency": 3,
+          "changes": [],
+          "done": 3718
+        },
+        "p-1-2": {
+          "start": 205,
+          "urgency": 3,
+          "changes": [
+            [
+              209,
+              1
+            ]
+          ],
+          "done": 1134
+        },
+        "p-1-3": {
+          "start": 205,
+          "urgency": 3,
+          "changes": [],
+          "done": 3721
+        },
+        "p-1-4": {
+          "start": 205,
+          "urgency": 3,
+          "changes": [
+            [
+              209,
+              1
+            ]
+          ],
+          "done": 1134
+        },
+        "p-1-5": {
+          "start": 205,
+          "urgency": 3,
+          "changes": [],
+          "done": 3726
+        },
+        "p-1-6": {
+          "start": 205,
+          "urgency": 3,
+          "changes": [],
+          "done": 3726
+        },
+        "p-2-1": {
+          "start": 205,
+          "urgency": 3,
+          "changes": [],
+          "done": 3726
+        },
+        "p-2-2": {
+          "start": 205,
+          "urgency": 3,
+          "changes": [],
+          "done": 3730
+        },
+        "p-2-3": {
+          "start": 205,
+          "urgency": 3,
+          "changes": [],
+          "done": 3730
+        },
+        "p-2-4": {
+          "start": 210,
+          "urgency": 3,
+          "changes": [],
+          "done": 3735
+        },
+        "p-2-5": {
+          "start": 210,
+          "urgency": 3,
+          "changes": [],
+          "done": 3735
+        },
+        "p-2-6": {
+          "start": 210,
+          "urgency": 3,
+          "changes": [],
+          "done": 3735
+        },
+        "p-3-1": {
+          "start": 210,
+          "urgency": 3,
+          "changes": [],
+          "done": 3735
+        },
+        "p-3-2": {
+          "start": 210,
+          "urgency": 3,
+          "changes": [],
+          "done": 3735
+        }
+      },
+      "frameTimes": [
+        17,
+        218,
+        231,
+        247,
+        265,
+        779,
+        796,
+        814,
+        829,
+        846,
+        863,
+        879,
+        896,
+        912,
+        929,
+        946,
+        962,
+        979,
+        1147,
+        3732,
+        4551
+      ]
+    },
+    {
+      "net": "slow",
+      "sched": "priority",
+      "entry": "top",
+      "cond": "B",
+      "rep": 1,
+      "protocol": "h2",
+      "summary": {
+        "fcp": 208,
+        "firstFrame": [
+          194,
+          0
+        ],
+        "parsed": {
+          "section-1": 195.89999997615814,
+          "section-2": 196,
+          "section-3": 197.5,
+          "section-4": 206.5999999642372,
+          "section-5": 211.19999998807907,
+          "section-6": 215.80000001192093,
+          "section-7": 220.39999997615814,
+          "section-8": 224.5999999642372,
+          "section-9": 228.89999997615814,
+          "section-10": 237.80000001192093,
+          "page-end": 743.5
+        },
+        "url": "https://localhost:4433/shop?cond=B&net=slow&sched=priority&at=5&cards=lazy&tail=100",
+        "scrollY": 0,
+        "viewport": [
+          390,
+          844
+        ],
+        "effectiveType": "4g",
+        "visible": [
+          "hero",
+          "p-1-1",
+          "p-1-2",
+          "p-1-3",
+          "p-1-4"
+        ],
+        "viewportDone": 4544,
+        "viewportFirst": 1144,
+        "heroShown": 1956,
+        "lcp": {
+          "t": 1956,
+          "id": "hero"
+        },
+        "firstScroll": null,
+        "requested": 15,
+        "requestedBytes": 760000,
+        "scroll": [
+          [
+            194,
+            0
+          ]
+        ]
+      },
+      "images": {
+        "hero": {
+          "initial": "High",
+          "start": 184,
+          "sent": 185,
+          "end": 1936,
+          "changes": []
+        },
+        "p-1-1": {
+          "initial": "Low",
+          "start": 195,
+          "sent": 195,
+          "end": 4518,
+          "changes": [
+            [
+              205,
+              "High"
+            ]
+          ]
+        },
+        "p-1-2": {
+          "initial": "Low",
+          "start": 195,
+          "sent": 195,
+          "end": 1134,
+          "changes": [
+            [
+              205,
+              "High"
+            ]
+          ]
+        },
+        "p-1-3": {
+          "initial": "Low",
+          "start": 195,
+          "sent": 196,
+          "end": 4523,
+          "changes": [
+            [
+              205,
+              "High"
+            ]
+          ]
+        },
+        "p-1-4": {
+          "initial": "Low",
+          "start": 205,
+          "sent": 206,
+          "end": 4523,
+          "changes": [
+            [
+              222,
+              "High"
+            ]
+          ]
+        },
+        "p-1-5": {
+          "initial": "Low",
+          "start": 205,
+          "sent": 206,
+          "end": 4528,
+          "changes": []
+        },
+        "p-1-6": {
+          "initial": "Low",
+          "start": 205,
+          "sent": 206,
+          "end": 4528,
+          "changes": []
+        },
+        "p-2-1": {
+          "initial": "Low",
+          "start": 205,
+          "sent": 206,
+          "end": 4528,
+          "changes": []
+        },
+        "p-2-2": {
+          "initial": "Low",
+          "start": 205,
+          "sent": 206,
+          "end": 4532,
+          "changes": []
+        },
+        "p-2-3": {
+          "initial": "Low",
+          "start": 206,
+          "sent": 206,
+          "end": 4532,
+          "changes": []
+        },
+        "p-2-4": {
+          "initial": "Low",
+          "start": 206,
+          "sent": 206,
+          "end": 4532,
+          "changes": []
+        },
+        "p-2-5": {
+          "initial": "Low",
+          "start": 206,
+          "sent": 207,
+          "end": 4532,
+          "changes": []
+        },
+        "p-2-6": {
+          "initial": "Low",
+          "start": 206,
+          "sent": 207,
+          "end": 4532,
+          "changes": []
+        },
+        "p-3-1": {
+          "initial": "Low",
+          "start": 206,
+          "sent": 207,
+          "end": 4536,
+          "changes": []
+        },
+        "p-3-2": {
+          "initial": "Low",
+          "start": 206,
+          "sent": 207,
+          "end": 4536,
+          "changes": []
+        }
+      },
+      "server": {
+        "hero": {
+          "start": 184,
+          "urgency": 1,
+          "changes": [],
+          "done": 1935
+        },
+        "p-1-1": {
+          "start": 195,
+          "urgency": 3,
+          "changes": [],
+          "done": 4517
+        },
+        "p-1-2": {
+          "start": 195,
+          "urgency": 3,
+          "changes": [
+            [
+              204,
+              1
+            ]
+          ],
+          "done": 1133
+        },
+        "p-1-3": {
+          "start": 195,
+          "urgency": 3,
+          "changes": [],
+          "done": 4522
+        },
+        "p-1-4": {
+          "start": 205,
+          "urgency": 3,
+          "changes": [],
+          "done": 4522
+        },
+        "p-1-5": {
+          "start": 205,
+          "urgency": 3,
+          "changes": [],
+          "done": 4526
+        },
+        "p-1-6": {
+          "start": 205,
+          "urgency": 3,
+          "changes": [],
+          "done": 4526
+        },
+        "p-2-1": {
+          "start": 205,
+          "urgency": 3,
+          "changes": [],
+          "done": 4526
+        },
+        "p-2-2": {
+          "start": 206,
+          "urgency": 3,
+          "changes": [],
+          "done": 4531
+        },
+        "p-2-3": {
+          "start": 206,
+          "urgency": 3,
+          "changes": [],
+          "done": 4531
+        },
+        "p-2-4": {
+          "start": 206,
+          "urgency": 3,
+          "changes": [],
+          "done": 4531
+        },
+        "p-2-5": {
+          "start": 206,
+          "urgency": 3,
+          "changes": [],
+          "done": 4531
+        },
+        "p-2-6": {
+          "start": 206,
+          "urgency": 3,
+          "changes": [],
+          "done": 4531
+        },
+        "p-3-1": {
+          "start": 206,
+          "urgency": 3,
+          "changes": [],
+          "done": 4535
+        },
+        "p-3-2": {
+          "start": 206,
+          "urgency": 3,
+          "changes": [],
+          "done": 4535
+        }
+      },
+      "frameTimes": [
+        9,
+        23,
+        206,
+        222,
+        240,
+        256,
+        773,
+        789,
+        804,
+        822,
+        839,
+        856,
+        871,
+        888,
+        906,
+        921,
+        938,
+        955,
+        971,
+        1142,
+        1956,
+        4541
+      ]
+    },
+    {
+      "net": "slow",
+      "sched": "priority",
+      "entry": "top",
+      "cond": "E3",
+      "rep": 1,
+      "protocol": "h2",
+      "summary": {
+        "fcp": 220,
+        "firstFrame": [
+          203,
+          0
+        ],
+        "parsed": {
+          "section-1": 204.19999998807907,
+          "section-2": 204.30000001192093,
+          "section-3": 211.30000001192093,
+          "section-4": 215.89999997615814,
+          "section-5": 220,
+          "section-6": 224.10000002384186,
+          "section-7": 228.80000001192093,
+          "section-8": 237.89999997615814,
+          "section-9": 242.39999997615814,
+          "section-10": 247,
+          "page-end": 747
+        },
+        "url": "https://localhost:4433/shop?cond=E3&net=slow&sched=priority&at=5&cards=lazy&tail=100",
+        "scrollY": 0,
+        "viewport": [
+          390,
+          844
+        ],
+        "effectiveType": "4g",
+        "visible": [
+          "hero",
+          "p-1-1",
+          "p-1-2",
+          "p-1-3",
+          "p-1-4"
+        ],
+        "viewportDone": 4556,
+        "viewportFirst": 1756,
+        "heroShown": 1756,
+        "lcp": {
+          "t": 1756,
+          "id": "hero"
+        },
+        "firstScroll": null,
+        "requested": 15,
+        "requestedBytes": 760000,
+        "scroll": [
+          [
+            203,
+            0
+          ]
+        ]
+      },
+      "images": {
+        "hero": {
+          "initial": "High",
+          "start": 191,
+          "sent": 191,
+          "end": 1745,
+          "changes": []
+        },
+        "p-1-1": {
+          "initial": "Low",
+          "start": 203,
+          "sent": 204,
+          "end": 4526,
+          "changes": [
+            [
+              217,
+              "High"
+            ]
+          ]
+        },
+        "p-1-2": {
+          "initial": "Low",
+          "start": 203,
+          "sent": 204,
+          "end": 4530,
+          "changes": [
+            [
+              217,
+              "High"
+            ]
+          ]
+        },
+        "p-1-3": {
+          "initial": "Low",
+          "start": 217,
+          "sent": 218,
+          "end": 4530,
+          "changes": [
+            [
+              234,
+              "High"
+            ]
+          ]
+        },
+        "p-1-4": {
+          "initial": "Low",
+          "start": 217,
+          "sent": 218,
+          "end": 4534,
+          "changes": [
+            [
+              234,
+              "High"
+            ]
+          ]
+        },
+        "p-1-5": {
+          "initial": "Low",
+          "start": 217,
+          "sent": 218,
+          "end": 4534,
+          "changes": []
+        },
+        "p-1-6": {
+          "initial": "Low",
+          "start": 217,
+          "sent": 218,
+          "end": 4538,
+          "changes": []
+        },
+        "p-2-1": {
+          "initial": "Low",
+          "start": 217,
+          "sent": 218,
+          "end": 4538,
+          "changes": []
+        },
+        "p-2-2": {
+          "initial": "Low",
+          "start": 217,
+          "sent": 218,
+          "end": 4542,
+          "changes": []
+        },
+        "p-2-3": {
+          "initial": "Low",
+          "start": 217,
+          "sent": 218,
+          "end": 4542,
+          "changes": []
+        },
+        "p-2-4": {
+          "initial": "Low",
+          "start": 217,
+          "sent": 218,
+          "end": 4542,
+          "changes": []
+        },
+        "p-2-5": {
+          "initial": "Low",
+          "start": 217,
+          "sent": 219,
+          "end": 4546,
+          "changes": []
+        },
+        "p-2-6": {
+          "initial": "Low",
+          "start": 217,
+          "sent": 219,
+          "end": 4546,
+          "changes": []
+        },
+        "p-3-1": {
+          "initial": "Low",
+          "start": 217,
+          "sent": 219,
+          "end": 4546,
+          "changes": []
+        },
+        "p-3-2": {
+          "initial": "Low",
+          "start": 217,
+          "sent": 219,
+          "end": 4546,
+          "changes": []
+        }
+      },
+      "server": {
+        "hero": {
+          "start": 189,
+          "urgency": 1,
+          "changes": [],
+          "done": 1742
+        },
+        "p-1-1": {
+          "start": 202,
+          "urgency": 3,
+          "changes": [],
+          "done": 4523
+        },
+        "p-1-2": {
+          "start": 202,
+          "urgency": 3,
+          "changes": [],
+          "done": 4527
+        },
+        "p-1-3": {
+          "start": 215,
+          "urgency": 3,
+          "changes": [],
+          "done": 4527
+        },
+        "p-1-4": {
+          "start": 215,
+          "urgency": 3,
+          "changes": [],
+          "done": 4531
+        },
+        "p-1-5": {
+          "start": 215,
+          "urgency": 3,
+          "changes": [],
+          "done": 4531
+        },
+        "p-1-6": {
+          "start": 215,
+          "urgency": 3,
+          "changes": [],
+          "done": 4535
+        },
+        "p-2-1": {
+          "start": 216,
+          "urgency": 3,
+          "changes": [],
+          "done": 4535
+        },
+        "p-2-2": {
+          "start": 216,
+          "urgency": 3,
+          "changes": [],
+          "done": 4539
+        },
+        "p-2-3": {
+          "start": 216,
+          "urgency": 3,
+          "changes": [],
+          "done": 4539
+        },
+        "p-2-4": {
+          "start": 216,
+          "urgency": 3,
+          "changes": [],
+          "done": 4539
+        },
+        "p-2-5": {
+          "start": 216,
+          "urgency": 3,
+          "changes": [],
+          "done": 4543
+        },
+        "p-2-6": {
+          "start": 216,
+          "urgency": 3,
+          "changes": [],
+          "done": 4543
+        },
+        "p-3-1": {
+          "start": 216,
+          "urgency": 3,
+          "changes": [],
+          "done": 4543
+        },
+        "p-3-2": {
+          "start": 216,
+          "urgency": 3,
+          "changes": [],
+          "done": 4543
+        }
+      },
+      "frameTimes": [
+        18,
+        219,
+        234,
+        250,
+        268,
+        285,
+        784,
+        800,
+        817,
+        833,
+        850,
+        867,
+        883,
+        900,
+        917,
+        934,
+        949,
+        967,
+        983,
+        1755,
+        4540,
+        4554
+      ]
+    }
+  ]
+}
