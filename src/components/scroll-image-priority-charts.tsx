@@ -1,7 +1,8 @@
 import type { CSSProperties } from "react";
 
-// Medians (10 runs each) from the 2026-10-25 experiments in
-// experiments/scroll-image-priority, in ms after the document request.
+// Medians (10 runs each) from the 2026-10-25 experiments, in ms after the
+// document request. The experiment code and raw data were removed after the
+// note was written; see commit 0f4ed19 (experiments/scroll-image-priority).
 // "Complete" is when every image in the landing viewport was painted and the
 // viewport had actually moved there: max(image render, hash scroll, FCP).
 
