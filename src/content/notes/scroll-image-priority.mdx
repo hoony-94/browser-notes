@@ -328,6 +328,7 @@ E3는 효과가 분명했다. 하지만 바로 기본값으로 넣을 만큼은 
 - **렌더 보류가 풀린 직후 맨 위 기준으로 계산하지 않기** → [내가 올린 버그 577605419 ↗](https://issues.chromium.org/issues/577605419)
   - 화면에 표시되지 않은 상단 이미지를 요청하거나, IntersectionObserver가 실제로 화면에 표시되지 않은 히어로를 화면에 보이는 요소로 판단하는 일이 없어야 한다.
   - HTTP/1.1에서는 이 요청들이 연결 6개를 먼저 차지해, 도착 섹션 이미지가 약 0.6초 늦게 요청됐다.
+  - 제보한 다음 날(2026-10-26) Chromium에서 버그로 재현을 확인받았다. 내가 첨부한 재현 서버로 Linux·Windows·macOS의 Stable 156, Beta 157, Dev·Canary 158에서 모두 재현됐고, M146에서도 같아서 최근에 생긴 문제(회귀)는 아닌 것으로 분류됐다. 지금은 Blink>Scroll 팀의 담당자 배정을 기다리고 있다.
 - **스크롤로 화면에 들어온 이미지의 우선순위를 바로 다시 계산하기.** 다른 이미지가 끝나는 것을 기다리지 않아야 한다. 비슷한 논의가 이미 있어서([whatwg/html #5408 ↗](https://github.com/whatwg/html/issues/5408)) 따로 올리지 않았다.
 - **브라우저가 바꾼 우선순위를 서버에 일관되게 전달하기.** 히어로처럼 브라우저에서는 High인데 서버는 모르는 경우가 있었다. 다만 실험 서버(Node.js) 쪽 문제일 수도 있어서, Chrome의 네트워크 로그로 확인하기 전까지는 올리지 않았다.
 
@@ -345,7 +346,7 @@ E3는 효과가 분명했다. 하지만 바로 기본값으로 넣을 만큼은 
 - [RFC 9218 · Extensible Prioritization Scheme for HTTP ↗](https://www.rfc-editor.org/rfc/rfc9218.html)
 - [Patrick Meenan · Better HTTP/2 prioritization for a faster web, Velocity 2019 ↗](https://conferences.oreilly.com/velocity/vl-ca/public/schedule/detail/74562)
 - [MDN · PerformanceElementTiming ↗](https://developer.mozilla.org/en-US/docs/Web/API/PerformanceElementTiming)
-- [Chromium 577605419 · Render-blocking rel=expect: first update after release runs at scrollY 0 ↗](https://issues.chromium.org/issues/577605419): 이 실험을 바탕으로 내가 올린 버그(2026-10-25).
+- [Chromium 577605419 · Render-blocking rel=expect: first update after release runs at scrollY 0 ↗](https://issues.chromium.org/issues/577605419): 이 실험을 바탕으로 내가 올린 버그(2026-10-25 제보, 2026-10-26 재현 확인).
 - [Chromium 577560702 · Scrolling to the URL fragment once the target is parsed ↗](https://issues.chromium.org/issues/577560702): 이 실험을 바탕으로 내가 올린 기능 요청(2026-10-25).
 - [Chromium 40769234 · location.hash scrolls twice ↗](https://issues.chromium.org/issues/40769234): #8에서 URL 해시를 파싱이 끝난 뒤 스크롤하는 이유를 설명한다.
 - [Chromium 571927100 · rel=expect does not successfully block rendering ↗](https://issues.chromium.org/issues/571927100): 같은 기능의 다른 문제(대상 요소의 자식이 다 파싱되기 전에 렌더 보류가 풀림).
