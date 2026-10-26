@@ -84,8 +84,6 @@ export const toc = [
 | Next.js 앱 | Next.js 16.4.2. 같은 포트의 v1 서버를 v2로 교체(직접 운영 흉내). 링크, `router.refresh()`, 뒤로 가기, `next/dynamic` 모달, Server Action |
 | 반복 | 시각을 재는 항목은 3~5회, 중앙값 |
 
-미리 렌더링은 측정 방법을 바꿔야 했다. Chrome은 시작한 탭에 디버거(CDP)가 붙어 있으면 미리 렌더링을 하지 않았다(`PrerenderingDisabledByDevTools`). 그래서 이 항목만 탭에 붙지 않고, 페이지가 `sendBeacon`으로 서버에 시각을 보고하게 했다.
-
 </section>
 
 <section id="keep">
