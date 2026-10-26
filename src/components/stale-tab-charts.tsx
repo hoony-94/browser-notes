@@ -10,7 +10,7 @@ const rows: Row[] = [
   { label: "다음 이동 때 전체 이동", detail: "이동할 때 새 문서를 받음", document: 317, content: 629 },
   { label: "즉시 새로고침", detail: "새 버전을 알자마자", document: 319, content: 628 },
   { label: "뒤로 가기 뒤 확인", detail: "이전 버전이면 새로고침", document: 329, content: 638 },
-  { label: "미리 렌더링 후 교체", detail: "Chrome, Speculation Rules", document: 15, content: 15 },
+  { label: "미리 그려 두고 교체", detail: "Chrome, Speculation Rules", document: 15, content: 15 },
   { label: "탭이 숨겨졌을 때", detail: "사용자가 보지 않을 때 끝남", document: null, content: null, note: "기다림 없음 (돌아오면 이미 v2)" },
 ];
 
