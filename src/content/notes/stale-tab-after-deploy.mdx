@@ -5,7 +5,7 @@ export const note = {
   status: "정리됨",
   tags: ["Version Skew", "Deployment", "Page Lifecycle", "Speculation Rules", "Next.js"],
   createdAt: "2026-10-26",
-  updatedAt: "2026-10-26",
+  updatedAt: "2026-10-27",
   isExample: false,
 };
 
@@ -26,8 +26,10 @@ export const toc = [
 문제를 세 층으로 나눠 실험했다. 열려 있던 탭이 **깨지지 않게** 버티는 일, 새 버전이 나왔다는 것을 **알아채는** 일, 그리고 사용자가 덜 방해받는 순간에 **넘어가는** 일이다.
 
 - **깨지지 않게**: 이전 빌드의 정적 파일을 남겨 두자 지연 로딩 오류가 사라졌다. 서버 응답 형식이 바뀐 화면은 이전 클라이언트를 이전 서버 코드로 보내야 했다. Next.js의 Server Action은 빌드마다 ID가 바뀌어 깨졌지만, 암호화 키를 고정하자 이전 탭에서도 그대로 동작했다.
-- **알아채게**: 응답 헤더에 빌드를 실어 보내면 추가 요청 없이 다음 요청 때 알았다. 탭으로 돌아올 때 한 번 확인하면 오래 머문 탭도 잡혔다. 한 탭이 알면 BroadcastChannel로 1ms 만에 다른 탭에 전달됐다.
-- **넘어가게**: 탭이 숨겨졌을 때 새로고침하면 사용자는 기다리지 않았다. 돌아오면 이미 v2였고, 작성 중인 글과 스크롤은 앱이 저장해 둔 만큼 남았다. Chrome에서는 v2를 뒤에서 미리 그려 두면(사전 렌더링, prerender), 새로고침에 0.63초 걸리던 교체가 0.015초로 줄었다.
+- **알아채게**: 응답 헤더에 빌드를 실어 보내면 추가 요청 없이 다음 요청 때 알았다. 탭을 떠날 때와 돌아올 때 한 번씩 확인하면 오래 머문 탭도 잡혔다. 한 탭이 알면 BroadcastChannel로 1ms 만에 숨은 탭까지 전달됐다.
+- **넘어가게**: 탭이 숨겨졌을 때 새로고침하면 사용자는 기다리지 않았다. 돌아오면 이미 v2였고, 작성 중인 글과 스크롤은 앱이 저장해 둔 만큼 남았다. 단, 숨기 전이나 숨어 있는 동안 새 버전을 알아야 했다. 돌아온 뒤에야 알면 다음 이동 때 넘어갔다. 보고 있는 탭을 바로 바꿔야 할 때는, Chrome에서 v2를 뒤에서 미리 그려 두면(사전 렌더링, prerender) 새로고침에 0.63초 걸리던 교체가 0.015초로 줄었다.
+
+> **실험 중 찾은 Chrome 버그.** 새 버전을 뒤에서 미리 그려 두는 실험을 하다가, 탭이 숨겨진 동안 요청한 미리 그리기는 탭을 다시 보여도 시작되지 않고 그 주소로 가는 링크를 누르면 이동이 멈추는 동작을 찾았다. 재현 페이지와 자동 검증 스크립트를 붙여 [Chromium 578118308 ↗](https://issues.chromium.org/issues/578118308)에 올렸다(2026-10-27 제보).
 
 <section id="question">
 
@@ -79,9 +81,9 @@ export const toc = [
 | --- | --- |
 | 브라우저 | Chrome 155.0.8059.85, macOS 15. |
 | 브라우저 기능만 쓰는 앱 | 목록·상세·글쓰기 화면, 지연 로딩 모달(`import()`), Navigation API 라우터. v1과 v2를 빌드. v2는 서버 응답 필드 이름을 바꿈(`items` → `rows`) |
-| 배포 흉내 | 서버 하나가 언제든 v2로 바뀐다. 배포 방식은 세 가지: 덮어쓰기(이전 파일 삭제), 이전 파일 보존, 이전 파일 보존 + 버전 고정(요청의 `x-build-id`를 보고 그 빌드의 서버 코드가 응답) |
+| 배포 | 서버 하나가 언제든 v2로 바뀐다. 배포 방식은 세 가지: 덮어쓰기(이전 파일 삭제), 이전 파일 보존, 이전 파일 보존 + 버전 고정(요청의 `x-build-id`를 보고 그 빌드의 서버 코드가 응답) |
 | 지연 | 서버가 HTML과 데이터를 각각 0.3초 늦게 보냄 |
-| Next.js 앱 | Next.js 16.4.2. 같은 포트의 v1 서버를 v2로 교체(직접 운영 흉내). 링크, `router.refresh()`, 뒤로 가기, `next/dynamic` 모달, Server Action |
+| Next.js 앱 | Next.js 16.4.2. 같은 포트의 v1 서버를 v2로 교체.<br/> 링크, `router.refresh()`, 뒤로 가기, `next/dynamic` 모달, Server Action |
 | 반복 | 시각을 재는 항목은 3~5회, 중앙값 |
 
 </section>
@@ -115,9 +117,10 @@ v2를 배포한 시점을 0으로 두고, 탭이 v2의 존재를 안 시각을 �
 | 응답 헤더(`x-latest-build`) | 다음 요청 때(6.31초) | 없음 | 요청이 있어야 안다 |
 | 5초 폴링(`/version.json`) | 4.18초 | 탭마다 분당 12회 | 숨겨진 탭은 브라우저가 타이머를 늦춘다 |
 | 탭 복귀(`visibilitychange`) | 돌아온 직후, +9ms | 돌아올 때마다 1회 | 오래 머문 탭도 잡는다 |
+| 탭을 떠날 때(`visibilitychange`) | 떠난 직후, +9ms | 떠날 때마다 1회 | 떠나기 전에 나온 배포만 잡는다 |
 | SSE | 0.003초 | 탭마다 연결 1개 | 실시간 알림 연결이 이미 있다면 거기에 싣는다 |
 | Service Worker | 다른 화면으로 이동했는데도 몰랐다. `registration.update()`를 부른 8.02초에야 앎 | `sw.js` 요청 | 브라우저는 문서를 새로 열 때만 워커를 확인한다 |
-| BroadcastChannel | 다른 탭이 안 지 1ms 뒤 | 없음 | 한 탭만 확인해도 모든 탭이 안다 |
+| BroadcastChannel | 다른 탭이 안 지 1ms 뒤 | 없음 | 한 탭만 확인해도 모든 탭이 안다. 숨은 탭도 받았다 |
 
 Service Worker는 "브라우저가 알아서 확인해 주는" 방법처럼 보였지만, 같은 문서 안에서 화면만 바꾸는 SPA에서는 이동만으로 확인이 일어나지 않았다.
 
@@ -129,13 +132,15 @@ Service Worker는 "브라우저가 알아서 확인해 주는" 방법처럼 보�
 
 <StaleTabWaitChart />
 
-| 넘어가는 순간 | 사용자가 기다린 시간 | 스크롤 위치(목록 2000) | 작성 중인 글 |
+넘어가는 순간마다 사용자가 기다린 시간과, 넘어간 뒤에 무엇이 남는지를 비교했다. 스크롤은 목록 화면을 2000px 내려 둔 채로, 글은 글쓰기 화면에 입력하던 채로 넘어가 봤다.
+
+| 넘어가는 순간 | 사용자가 기다린 시간 | 스크롤 위치가 남나 | 작성 중인 글이 남나 |
 | --- | --- | --- | --- |
 | 다음 이동 때 전체 이동 | 0.63초. 평소 SPA 이동은 0.32초 | 어차피 새 화면 | 이동 전이라 해당 없음 |
-| 즉시 새로고침 | 0.63초. 그중 0.31초는 본문이 빈 화면 | 브라우저 기본은 **잃음(0)**, 앱이 저장하면 유지 | 저장하지 않으면 **잃음** |
-| 탭이 숨겨졌을 때 | **없음**. 돌아오면 이미 v2 | 앱이 저장하면 유지 | 저장하지 않은 글이 있으면 미루고 v1로 둠. 저장하면 v2에서 되살림 |
-| 뒤로 가기 뒤 확인 | 0.64초 | 앱이 저장하면 유지 | — |
-| 미리 그려 두고 교체 | **0.015초** | 꺼낼 때 복원하면 유지 | 앱이 저장해야 함 |
+| 즉시 새로고침 | 0.63초. 그중 0.31초는 본문이 빈 화면 | 브라우저 기본은 **잃음**. 앱이 저장해 두면 유지 | 앱이 저장해 두지 않으면 **잃음** |
+| 탭이 숨겨졌을 때 | **없음**. 돌아오면 이미 v2 | 앱이 저장해 두면 유지 | 앱이 저장해 두면 유지. 저장해 두지 않았으면 글이 있는 동안 새로고침을 미룸 |
+| 뒤로 가기 뒤 확인 | 0.64초 | 떠날 때 저장해 두면 유지 | 앱이 저장해 두지 않으면 **잃음**. 저장해 두면 유지 |
+| 미리 그려 두고 교체 | **0.015초** | 꺼낼 때 복원하면 유지 | 저장해 두고 꺼낼 때 다시 읽으면 유지 |
 
 ### 탭이 숨겨졌을 때가 가장 자연스러웠다
 
@@ -145,8 +150,32 @@ Service Worker는 "브라우저가 알아서 확인해 주는" 방법처럼 보�
 </figure>
 
 - 사용자가 보고 있지 않을 때 새로고침이 끝나서, 돌아온 순간 기다림 없이 v2였다.
-- 조건이 두 가지 있다. 작성 중인 글은 `sessionStorage`에 저장해 두어야 하고, 저장하지 않은 글이 있으면 새로고침을 미뤄야 한다. 실험에서도 저장하지 않은 경우는 v1로 남겨 글을 지켰다.
+- 조건이 있다. 작성 중인 글은 `sessionStorage`에 저장해 두어야 하고, 끊기면 안 되는 일이 있으면 새로고침을 미뤄야 한다. 실험에서는 저장하지 않은 글, 열린 모달, 진행 중인 업로드가 있으면 미뤘다가 풀린 뒤에 넘어갔다. 업로드를 미루지 않으면 4MB 중 2MB쯤에서 끊겼다.
+- 앱이 저장해 두면 되살릴 수 있는 것이 생각보다 많았다. 커서 위치와 선택 범위, 고른 파일(`File`을 IndexedDB에 두었다가 `DataTransfer`로 다시 넣음)까지 돌아왔다. 실행 취소 기록만은 되살릴 수 없었다.
 - 스크롤 위치는 브라우저에 맡기면 잃었다. 새로고침 뒤 목록 데이터가 늦게 와서, 브라우저가 위치를 되돌리려던 순간에는 페이지가 짧았기 때문이다. 앱이 위치를 저장했다가 목록을 그린 뒤 되돌려야 했다.
+
+### 탭이 숨겨지기 전에 새 버전을 알고 있어야 했다
+
+위 그림이 매끄러웠던 것은 실시간 알림(SSE)으로 배포 직후에 이미 알고 있었기 때문이다. 탭으로 돌아올 때만 확인하면, 그때는 사용자가 화면을 보고 있어서 숨김 시점이 이미 지나 있다. 알게 된 때에 따라 넘어가는 순간이 달라졌다.
+
+| 언제 알았나 | 어떻게 | 넘어간 순간 |
+| --- | --- | --- |
+| 보고 있는 동안 | 응답 헤더, 실시간 알림 | 다음에 탭이 숨겨질 때 |
+| 떠나는 순간 | 떠날 때 한 번 확인 | 바로, 숨은 채로(떠나고 0.6초 뒤 v2) |
+| 숨어 있는 동안 | 다른 탭이 BroadcastChannel로 알려 줌 | 바로, 숨은 채로(0.63초 뒤 v2) |
+| 돌아온 뒤에야 | 탭 복귀 확인 | 다음 이동 때(이동에 0.62~0.66초).<br/>이동하지 않으면 그대로 v1. 다시 숨겨지면 첫 줄과 같이 숨은 채로 넘어감 |
+
+<figure className="note-figure">
+  <img src="/notes/stale-tab-after-deploy/browser-leave-check.png" alt="실제 Chrome 창 여섯 장. 위 줄은 배포가 먼저인 경우로, v2 배포 직후 회색 헤더 v1 목록, 다른 탭으로 떠난 순간 숨은 탭 제목이 목록 · v2로 바뀜, 돌아오면 초록 헤더 v2. 아래 줄은 떠난 게 먼저인 경우로, 떠나 있는 동안 배포돼도 탭 제목은 목록 · v1, 돌아왔을 때 회색 헤더 v1 그대로, 상품 2 링크를 누르자 초록 헤더 v2 상품 2 화면." width="2800" height="1054" />
+  <figcaption>떠날 때 확인하면 그 전에 나온 배포는 숨은 사이에 넘어갔다(위). 떠난 뒤에 나온 배포는 돌아올 때 확인으로 잡고, 다음 링크에서 넘어갔다(아래).</figcaption>
+</figure>
+
+탭이 숨겨졌을 때 새로고침하는 방법을 다음 이동 때 전체 이동으로 넘어가는 방법과 같이 쓰면 조심할 것이 하나 있었다. 링크를 눌러 문서를 떠날 때도 브라우저는 `pagehide` 다음에 `visibilitychange`(hidden)를 보낸다. 이것을 탭 전환으로 여기고 새로고침하면, 사용자가 누른 링크 대신 원래 화면이 다시 열렸다. `pagehide` 뒤에 오는 숨김은 무시해야 했다.
+
+<figure className="note-figure">
+  <video src="/notes/stale-tab-after-deploy/link-bounce.mp4" poster="/notes/stale-tab-after-deploy/link-bounce-poster.png" width="1280" height="372" autoPlay muted loop playsInline controls aria-label="실제 Chrome 창 두 개를 나란히 녹화한 영상. 둘 다 이전 버전인 걸 안 탭에서 상품 2 링크를 누른다. 왼쪽은 상품 2가 잠깐 보였다가 목록으로 되돌아가고, 오른쪽은 상품 2에 머문다." />
+  <figcaption>왼쪽은 떠나는 문서의 숨김에도 새로고침을 걸어, 상품 2를 열었다가 목록으로 되돌아갔다. 오른쪽은 <code>pagehide</code> 뒤의 숨김을 무시해 상품 2에 머물렀다. 장면이 보이도록 서버 응답을 0.8초 늦춰 녹화했다.</figcaption>
+</figure>
 
 ### 새로고침의 빈 화면은 새 버전을 미리 그려 두어 없앴다
 
@@ -155,20 +184,31 @@ Service Worker는 "브라우저가 알아서 확인해 주는" 방법처럼 보�
   <figcaption>교체 신호를 보낸 시점이 0. 새로고침은 0.25초에 본문이 빈 v2를 보여줬고, 미리 그려 둔 v2는 0초 칸부터 완성된 화면이었다.</figcaption>
 </figure>
 
+- 보고 있는 탭을 바로 바꿔야 할 때를 위한 방법이다. 사용자가 "새 버전 적용"을 눌렀거나, 호환이 깨지는 배포라 기다릴 수 없을 때다. 사용자가 글을 쓰는 중에 저절로 바꾸지는 않는다.
 - 새 버전을 알면 `<script type="speculationrules">`로 지금 주소의 v2(`?__v=v2`)를 뒤에서 미리 그려 두게 했다. 교체 순간에는 `location.replace()`로 그 주소로 가고, 꺼낸 페이지가 주소의 표시를 지운다.
 - 미리 그려 둔 v2는 교체 신호보다 2.2초 앞서 이미 실행됐고(`document.prerendering`), 1.9초 앞서 목록까지 그려 두었다. 꺼내는 데는 10~19ms가 걸렸다(5회, `activationStart`로 확인).
-- 대가가 있다. v2를 미리 받는 만큼 서버 요청이 늘어난다. 배포 순간 모든 탭이 한꺼번에 v2를 미리 그려 두면 서버에 몰릴 수 있어, 실제로는 무작위로 시점을 흩뜨려야 할 것이다. Chromium 계열에서만 확인했다.
+- 미리 그리기는 탭이 보일 때 요청해야 했다. 숨은 상태에서 요청하면 Chrome 156은 시작하지 않았고(서버 요청 0건), 탭이 다시 보여도 시작하지 않았다. 그 주소로 교체하려는 이동도 40초 넘게 멈췄다(탭 전환, 창 최소화 모두). 보일 때까지 요청을 미루자 정상으로 교체됐다(9~18ms). 이미 그려 둔 것은 3초 숨겨도 남아 있었다.
+- 글쓰기 화면이라면, 미리 그린 v2는 그린 시점의 `sessionStorage`를 본다. 그 뒤에 쓴 글은 꺼내는 순간(`prerenderingchange`)에 다시 읽어야 남았다. 그 순간에는 최신 값이 보였다.
+- 다음 이동에도 쓸 수 있다. 새 버전을 안 뒤 사용자가 링크에 마우스를 올리면 그 주소를 미리 그리게 했다. 클릭 0.3초 전에 올렸으면 0.62초 걸리던 전체 이동이 0.31초로, 1초 전이면 0.006초로 줄었다.
+- 대가가 있다. v2를 미리 받아 두는 만큼 서버 요청이 늘어난다. 특히 배포 직후가 문제다. 열려 있던 탭들이 거의 동시에 새 버전을 알고 한꺼번에 v2를 그려 두려 하면, 그 몇 초 동안 요청이 서버에 몰린다. 실제로 쓰려면 알자마자 그리지 말고, 탭마다 0에서 몇 분 사이의 무작위 지연을 두고 그 뒤에 그리게 해야 할 것이다. 탭마다 뽑는 값이 다르니 요청이 그 시간 폭에 고르게 퍼진다. "모두 30초 뒤"처럼 고정된 지연은 소용없다. 몰리는 순간이 30초 뒤로 옮겨질 뿐이다.
+- 다만 늘어나는 요청이 탭 수만큼은 아니다. JS와 CSS 같은 정적 파일은 같은 브라우저의 탭끼리 HTTP 캐시를 공유해, 한 탭이 받으면 나머지는 서버까지 가지 않는다. 탭마다 새로 받는 것은 문서 HTML과 그 화면이 쓰는 데이터 요청이다. 그리고 이 비용은 보고 있는 탭을 바로 바꿔야 할 때만 치를 가치가 있다. 숨은 탭은 앞에서처럼 숨은 채로 새로고침하면 되고, 그때는 사용자가 각자 탭을 떠나는 시점에 요청이 알아서 흩어진다. 미리 그리기는 Chromium 계열에서만 확인했다.
 
-### 뒤로 가기는 이전 버전을 두 가지 길로 되살렸다
+### 뒤로 가기는 두 가지 방식으로 이전 버전을 되살렸다
 
 v1 화면에서 다른 사이트로 갔다가, 그사이 v2를 배포하고 뒤로 가기를 눌렀다.
 
-| 되살아난 길 | 언제 | `pageshow` | 확인하지 않으면 | `persisted`만 확인 | 기록 이동(`back_forward`)까지 확인 |
+| 되살아난 방식 | 언제 | `pageshow` | 확인하지 않으면 | `persisted`만 확인 | 기록 이동(`back_forward`)까지 확인 |
 | --- | --- | --- | --- | --- | --- |
 | bfcache | 페이지가 bfcache에 들어갔을 때 | `persisted: true` | v1 그대로 | 0.33초에 v2 | 0.33초에 v2 |
 | HTTP 캐시의 HTML | bfcache에 못 들어갔을 때(예: `unload` 핸들러) | `persisted: false`, `type: "back_forward"` | v1 그대로 | **v1 그대로(놓침)** | 0.34초에 v2 |
 
-두 번째 길은 예상하지 못했다. HTML 응답이 `Cache-Control: no-cache`였는데도, Chrome은 뒤로 가기에서 서버에 다시 묻지 않고 캐시에 남은 v1 HTML로 문서를 새로 열었다. 그래서 "bfcache로 돌아왔는가"만 보면 놓치고, 탐색 종류가 `back_forward`인지까지 봐야 했다.
+두 번째 방식은 예상하지 못했다. HTML 응답이 `Cache-Control: no-cache`였는데도, Chrome은 뒤로 가기에서 서버에 다시 묻지 않고 캐시에 남은 v1 HTML로 문서를 새로 열었다. 그래서 "bfcache로 돌아왔는가"만 보면 놓치고, 탐색 종류가 `back_forward`인지까지 봐야 했다.
+
+돌아온 뒤 v2로 넘어갈 때 무엇이 남는지도 두 방식 모두에서 확인했다(Chrome 156, 조건마다 2회).
+
+- 작성 중인 글은 앱이 `sessionStorage`에 저장해 두지 않으면 두 방식 모두에서 잃었다. bfcache로 돌아온 페이지에는 글이 그대로 있지만, 새 버전으로 새로고침하는 순간 사라진다. 저장해 두면 두 방식 모두에서 돌아왔다. 숨겨졌을 때처럼 저장되지 않은 글이 있으면 미루게 할 수도 있지만, 이 실험에서는 바로 새로고침했다.
+- 스크롤은 새로고침 직전에만 저장하는 앱으로는 부족했다. bfcache로 돌아왔을 때는 2000이 남았지만, HTTP 캐시로 돌아왔을 때는 문서를 새로 열어 0에서 시작하고, 그 상태에서 새로고침 직전에 저장하면 0이 떠날 때의 위치를 덮어쓴다. 떠날 때(`pagehide`) 저장해 두고, 새로 연 문서가 그 값을 되돌리기 전에는 덮어쓰지 않자 두 방식 모두에서 2000이 돌아왔다.
+- 기다린 시간은 v2 문서가 뜨기까지 0.33초, 목록까지 그려지기까지 0.64초였다. 위 표의 "0.33초에 v2"는 앞의 값이고, 넘어가게 표의 0.64초는 뒤의 값이다.
 
 ### Navigation API 라우터의 함정 세 가지
 
@@ -194,15 +234,21 @@ v1 화면에서 다른 사이트로 갔다가, 그사이 v2를 배포하고 뒤�
 | `router.refresh()` | 전체 새로고침으로 v2 | 탭이 숨겨졌을 때 이걸 부르면, "숨겨졌을 때 넘어가기"를 Next.js 방식으로 할 수 있다 |
 | 뒤로 가기 | 라우터 캐시의 v1 화면이 그대로 남음. 다음 링크에서 v2 | 돌아온 뒤 확인이 필요하면 직접 |
 | `next/dynamic` 모달, 이전 파일 삭제 | `ChunkLoadError`, 화면 전체가 오류 화면 | 이전 정적 파일 보존(측정: v1 모달이 정상으로 열림) |
-| Server Action, 기본 | `Server Action "…" was not found on the server` | `NEXT_SERVER_ACTIONS_ENCRYPTION_KEY`를 배포마다 같게 |
-| Server Action, 키 고정 | v1 탭이 v2 서버의 액션을 정상 호출(`pong (v2 서버)`) | — |
+| Server Action, 기본 | `Server Action "…" was not found on the server`. 폼 제출이면 화면 전체가 오류 화면 | `NEXT_SERVER_ACTIONS_ENCRYPTION_KEY`를 배포마다 같게 |
+| Server Action, 키 고정 | v1 탭이 v2 서버의 액션을 정상 호출(`pong (v2 서버)`). 폼 제출도 성공 | 액션의 파일과 이름은 그대로 두고, 인자는 하위 호환으로 |
 
 <figure className="note-figure">
   <img src="/notes/stale-tab-after-deploy/next-chunk-error.png" alt="실제 Chrome 창 두 장. 왼쪽은 Next.js v1 홈 화면이다. 오른쪽은 v2로 교체한 뒤 보고서 열기를 누른 화면으로, 페이지 전체가 This page couldn't load 오류 화면이다." width="1100" height="444" />
   <figcaption>모달 하나를 열었을 뿐인데 화면 전체가 오류 화면이 됐다. 이전 정적 파일을 남겨 두면 이 장면은 생기지 않았다.</figcaption>
 </figure>
 
-- Server Action은 코드가 완전히 같아도 빌드마다 ID가 달라졌다. 같은 암호화 키로 두 번 빌드하자, 본문이 다른 액션까지 ID가 같아졌다. ID는 키·파일·이름으로 정해지는 것으로 보인다. 다만 키를 고정하면 이전 탭이 새 서버의 새 구현을 부르게 되므로, 액션의 인자와 반환 형식은 하위 호환으로 바꿔야 한다.
+<figure className="note-figure">
+  <img src="/notes/stale-tab-after-deploy/next-form-submit.png" alt="실제 Chrome 창 세 장. 왼쪽은 Next.js v1 글쓰기 화면에 결재 의견을 쓴 모습이다. 가운데는 기본 설정으로 v2를 배포한 뒤 제출한 화면으로, 페이지 전체가 This page couldn't load 오류 화면이다. 오른쪽은 암호화 키를 고정해 배포한 뒤 제출한 화면으로, 받음 (v2 서버)와 쓴 글이 보인다." width="2800" height="808" />
+  <figcaption>v1 화면에서 쓴 글을 v2 배포 뒤에 제출했다. 기본 설정에서는 쓰던 글도 화면에서 사라졌고, 글을 sessionStorage에 저장해 둔 덕에 새로고침 뒤 되살아났다.</figcaption>
+</figure>
+
+- Server Action은 코드가 완전히 같아도 빌드마다 ID가 달라졌다. 같은 암호화 키로 빌드하면 ID가 같았고, 빌드 결과물을 비교해 보니 ID는 키·파일·이름으로 정해졌다. 그래서 키를 고정해도 액션을 다른 파일로 옮기거나 이름을 바꾸면 이전 탭에서 깨졌다.
+- 반대로 인자 형식만 바꾸면 ID가 그대로라, 이전 탭이 새 구현을 불러 오류 없이 엉뚱한 값(`undefined`)이 돌아왔다. 바깥 변수를 쓰는 액션은 v1 화면이 암호화해 둔 값을 v2 코드가 풀어 실행했다. 키를 고정하면 액션의 인자와 반환 형식은 하위 호환으로 바꿔야 한다.
 - 이동 중에 생긴 오류를 전체 이동으로 바꾸는 실험 설정(`experimental.appNavFailHandling`)도 코드에 있다. 이동 중이 아닐 때의 오류는 대상이 아니라서, 모달 같은 경우는 이전 파일 보존이 더 확실했다. 이 설정은 측정하지 않았다.
 
 </section>
@@ -215,15 +261,15 @@ v1 화면에서 다른 사이트로 갔다가, 그사이 v2를 배포하고 뒤�
 | --- | --- |
 | 이전 파일만 남기면 지연 로딩 오류는 사라진다. 서버 쪽 약속이 바뀌면 여전히 깨진다 | 맞았다. Server Action은 코드가 같아도 깨졌고, 키를 고정해야 했다 |
 | 버전 고정은 요청 헤더 하나로 만들 수 있다 | 맞았다. 대가는 두 버전의 서버 코드를 함께 돌리는 것 |
-| 응답 헤더와 탭 복귀 확인이면 충분하다 | 맞았다. Service Worker는 SPA에서 기대만큼 스스로 확인하지 않았다 |
+| 응답 헤더와 탭 복귀 확인이면 충분하다 | 알아채는 데는 충분했다. 하지만 돌아온 뒤에야 알면 숨김 시점이 지나 다음 이동 때 넘어갔다. 떠날 때도 한 번 확인해야 숨은 사이에 넘어갔다. Service Worker는 SPA에서 기대만큼 스스로 확인하지 않았다 |
 | 다음 이동, 숨겨졌을 때, 뒤로 가기가 자연스러운 순간이다 | 맞았다. 뒤로 가기는 bfcache 말고 HTTP 캐시로도 이전 버전이 돌아와, 확인 조건을 넓혀야 했다 |
-| 미리 그려 두면 빈 화면을 없앨 수 있다 | Chrome에서 맞았다(0.63초 → 0.015초) |
+| 미리 그려 두면 빈 화면을 없앨 수 있다 | Chrome에서 맞았다(0.63초 → 0.015초). 단, 탭이 보일 때 요청해야 했다 |
 
 ### 잦은 배포에서 쓸 조합
 
-1. **배포가 열린 탭을 깨지 않게 한다.** 해시가 붙은 정적 파일은 지우지 않고 쌓는다(가장 오래 열려 있는 세션보다 길게). Server Action 키를 고정한다. API는 하위 호환으로만 바꾸고, 그럴 수 없을 때만 버전 고정을 쓴다.
-2. **새 버전은 요청을 늘리지 않고 알아챈다.** 모든 응답에 빌드 헤더를 싣고, 탭으로 돌아올 때 한 번 확인하고, 알게 된 것은 BroadcastChannel로 다른 탭에 나눈다. 폴링이나 SSE는 실시간 공지가 꼭 필요할 때만, 그것도 이미 있는 실시간 연결에 싣는다.
-3. **넘어가는 순간을 고른다.** 다음 이동 때 전체 이동, 탭이 숨겨졌을 때(작성 중인 글은 저장해 두고), 뒤로 가기로 돌아왔을 때(`back_forward` 포함). Chrome에서는 v2를 미리 그려 두어 교체 순간을 감출 수 있다.
+1. **배포가 열린 탭을 깨지 않게 한다.** 해시가 붙은 정적 파일은 지우지 않고 쌓는다(가장 오래 열려 있는 세션보다 길게). Server Action 키를 고정하고, 액션의 파일과 이름은 유지한다. API는 하위 호환으로만 바꾸고, 그럴 수 없을 때만 버전 고정을 쓴다.
+2. **새 버전은 요청을 늘리지 않고 알아챈다.** 모든 응답에 빌드 헤더를 싣고, 탭을 떠날 때와 돌아올 때 한 번씩 확인하고, 알게 된 것은 BroadcastChannel로 다른 탭에 나눈다. 폴링이나 SSE는 실시간 공지가 꼭 필요할 때만, 그것도 이미 있는 실시간 연결에 싣는다.
+3. **넘어가는 순간을 고른다.** 숨기 전이나 숨은 동안 알았다면 탭이 숨겨졌을 때(작성 중인 글은 저장해 두고, 업로드 같은 일은 끝난 뒤에, `pagehide` 뒤의 숨김은 빼고). 돌아온 뒤에야 알았다면 다음 이동 때. 뒤로 가기로 돌아왔을 때는 `back_forward`까지 확인한다. 보고 있는 탭을 바로 바꿔야 하면, Chrome에서는 탭이 보일 때 v2를 미리 그려 두어 교체 순간을 감출 수 있다.
 4. **즉시 넘기는 것은 호환이 깨지는 배포에만 쓴다.** 모바일 앱의 "최소 지원 버전"처럼, 서버가 "이 빌드보다 오래된 탭은 지금 바꿔야 한다"는 신호를 따로 보내는 방식이 맞다고 본다.
 5. **지금 쓰던 ChunkLoadError 안내 UI는 마지막 안전망으로 남긴다.** 감지는 메시지가 아니라 `error.name`으로 하고, 브라우저 기본 모듈의 `TypeError`도 함께 본다.
 
@@ -232,7 +278,8 @@ v1 화면에서 다른 사이트로 갔다가, 그사이 v2를 배포하고 뒤�
 ### 아직 확인하지 못한 것
 
 - Safari·Firefox. 미리 그려 두기는 Chromium 계열에서만 확인했고, 다른 동작도 Chrome에서만 쟀다.
-- 배포 순간 많은 탭이 한꺼번에 v2를 미리 그려 둘 때의 서버 부하
+- 여러 사용자가 같은 순간 새 버전을 알 때의 서버 부하. 한 브라우저 안에서는 숨은 탭 10개가 한꺼번에 새로고침해도, 서버에 동시에 들어온 요청은 6개를 넘지 않았다(HTTP/1.1 연결 제한). 무작위로 기다리게 해도 숨은 탭의 타이머가 1초 단위로 묶여 다시 몰렸다.
+- 숨은 상태에서 요청한 미리 그리기가 멈춘 현상은 Chrome 156에서 사람이 직접 탭을 바꾸거나 창을 최소화해도 같았고, 버그로 제보했다([Chromium 578118308 ↗](https://issues.chromium.org/issues/578118308)). 다른 버전에서는 확인하지 못했다.
 - 오래 숨겨진 탭. Chrome은 5분 넘게 숨겨진 탭에서 이어 실행되는 타이머를 조건에 따라 1분에 한 번으로 늦추고, 메모리가 부족하면 탭을 버렸다가 다시 열 때 새로 불러온다. 버려졌다 돌아오는 탭은 저절로 최신이 되지만, 측정하지는 않았다.
 - 실제 사용자 데이터. 이 실험은 같은 컴퓨터 안의 측정이다.
 
@@ -252,11 +299,14 @@ v1 화면에서 다른 사이트로 갔다가, 그사이 v2를 배포하고 뒤�
 - [MDN · PerformanceNavigationTiming.type ↗](https://developer.mozilla.org/en-US/docs/Web/API/PerformanceNavigationTiming/type): `back_forward`.
 - [web.dev · Back/forward cache ↗](https://web.dev/articles/bfcache)
 - [Chrome for Developers · bfcache notRestoredReasons ↗](https://developer.chrome.com/docs/web-platform/bfcache-notrestoredreasons)
-- [MDN · visibilitychange ↗](https://developer.mozilla.org/en-US/docs/Web/API/Document/visibilitychange_event)
+- [MDN · visibilitychange ↗](https://developer.mozilla.org/en-US/docs/Web/API/Document/visibilitychange_event): 탭을 바꿀 때뿐 아니라 다른 페이지로 이동할 때도 `hidden`으로 발생한다.
+- [MDN · pagehide ↗](https://developer.mozilla.org/en-US/docs/Web/API/Window/pagehide_event)
+- [MDN · prerenderingchange ↗](https://developer.mozilla.org/en-US/docs/Web/API/Document/prerenderingchange_event)
+- [MDN · HTMLInputElement.files ↗](https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement/files): `DataTransfer`로 만든 `FileList`를 넣을 수 있다.
 - [MDN · BroadcastChannel ↗](https://developer.mozilla.org/en-US/docs/Web/API/BroadcastChannel)
 - [web.dev · The service worker lifecycle ↗](https://web.dev/articles/service-worker-lifecycle)
 - [Chrome for Developers · Page Lifecycle API ↗](https://developer.chrome.com/docs/web-platform/page-lifecycle-api)
 - [Chrome for Developers · Heavy throttling of chained JS timers beginning in Chrome 88 ↗](https://developer.chrome.com/blog/timer-throttling-in-chrome-88)
-- Next.js 16.4.2 코드(`node_modules/next/dist`): `client/components/router-reducer/fetch-server-response.js`(빌드가 다르면 `doMpaNavigation`), `client/components/nav-failure-handler.js`(`appNavFailHandling`), `server/app-render/manifests-singleton.js`.
+- [Chromium 578118308 · Prerender rule added while tab hidden never starts; later navigation to that URL hangs ↗](https://issues.chromium.org/issues/578118308): 이 실험을 바탕으로 내가 올린 버그(2026-10-27 제보).
 
 </section>
