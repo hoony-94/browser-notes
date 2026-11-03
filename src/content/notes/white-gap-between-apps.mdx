@@ -1,0 +1,125 @@
+export const note = {
+  title: "서버가 다른 SPA 두 개를 오갈 때, 흰 화면이 나타나는 틈은 무엇으로 메울 수 있을까?",
+  description: "같은 도메인 아래 경로마다 다른 서버가 각자의 SPA를 내려주면, 앱 사이 이동은 문서 교체가 되고 공통 헤더가 사라졌다 다시 나타난다. 브라우저가 이전 화면을 붙잡아 두는 기능과 새 화면을 더 빨리 만드는 방법 중 무엇이 그 틈을 메우는지 확인한다.",
+  topic: "렌더링과 인터랙션",
+  status: "질문",
+  tags: ["SPA", "Paint Holding", "View Transitions", "Render Blocking", "Speculation Rules", "Multi-Zones"],
+  createdAt: "2026-11-03",
+  updatedAt: "2026-11-03",
+  isExample: false,
+};
+
+export const toc = [
+  { id: "question", title: "출발한 질문" },
+  { id: "timeline", title: "이동 한 번에 생기는 일" },
+  { id: "candidates", title: "비교해 볼 방법" },
+  { id: "framework", title: "프레임워크라는 사례" },
+  { id: "plan", title: "실험 아이디어" },
+  { id: "sources", title: "근거와 출처" },
+];
+
+<section id="question">
+
+## 서버가 다른 SPA 두 개를 오갈 때, 흰 화면은 어디서 생길까?
+
+- 이 이동은 SPA 이동일까, MPA 이동일까? 브라우저는 무엇을 버리고 무엇을 새로 만들까?
+- 같은 출처 이동이면 Chrome이 이전 화면을 잠시 붙잡아 준다는데, 왜 흰 화면이 보였을까?
+- View Transition을 켜면 틈이 가려질까, 아니면 빈 첫 화면이 오히려 일찍 드러날까?
+- 이전 화면을 더 오래 붙잡는 것과 새 화면을 더 빨리 만드는 것 중 무엇이 틈을 줄일까?
+- 두 앱이 똑같이 그리는 헤더와 왼쪽 메뉴(LNB)는, 이동하는 동안 그대로 있는 것처럼 보일 수 있을까?
+
+### 이 질문을 시작한 계기
+
+업무용 서비스는 메인, 할 일, 메일처럼 화면마다 따로 만든 SPA를 같은 도메인의 다른 경로에 붙여 쓰기도 한다. 경로마다 다른 서버가 응답하므로, 메인에서 할 일로 넘어가는 순간 문서가 통째로 바뀐다. 두 앱 모두 같은 헤더와 LNB를 그리는데도, 이동할 때마다 헤더가 사라지고 흰 화면이 잠깐 보였다가 다시 나타난다. 교차 문서 View Transition을 붙여 봐도 흰 화면으로 부드럽게 바뀔 뿐, 틈은 그대로 남는 것처럼 보였다.
+
+### SPA일까, MPA일까
+
+각 앱 안에서의 이동은 SPA다. 문서는 그대로 두고 JS가 화면 일부만 바꾼다. 하지만 두 앱 사이의 이동은 새 HTML을 받아 문서를 통째로 바꾸므로, 브라우저 입장에서는 MPA의 페이지 이동과 같다. 그래서 MPA를 위해 만들어진 기능들이 모두 적용 대상이 된다. 이전 화면 붙잡기(paint holding), 교차 문서 View Transition, 미리 그려 두기, 즉 사전 렌더링(prerender), 뒤로 가기 캐시(bfcache)다.
+
+다른 점은 하나다. 보통의 MPA는 서버가 내용이 담긴 HTML을 주지만, 여기서는 `<div id="root">`만 있는 빈 껍데기를 준다. 결국 이 노트의 질문은 "내용 없는 첫 화면을 브라우저 기능이 얼마나 가려 줄 수 있는가"다.
+
+### 처음 세운 가설
+
+- 흰 화면은 새 문서의 빈 껍데기가 화면에 나간 순간부터 React가 첫 커밋을 할 때까지다.
+- Chrome의 이전 화면 붙잡기가 그 구간을 덮어야 한다. 붙잡는 시간이 다 되거나, 껍데기 안의 로딩 문구 같은 것이 첫 콘텐츠 페인트로 잡히면 흰 화면이 나간다.
+- 교차 문서 View Transition은 새 문서의 첫 렌더를 새 화면으로 찍는다. 빈 껍데기가 찍히면 이전 화면에서 흰 화면으로 부드럽게 바뀔 뿐이다.
+- 번들 스크립트에 렌더 차단을 걸면 이전 화면이 번들 실행 때까지 남는다. 다만 React가 첫 커밋을 다음 작업으로 미루면 한 프레임은 여전히 비어 있을 수 있다.
+- 실제로 틈을 줄이는 건 서버가 주는 골격 HTML과 미리 그려 두기일 것이다. 골격은 두 앱이 헤더 마크업을 나눠 가져야 하고, 미리 그려 두기는 빗나간 예측의 비용이 따른다.
+
+</section>
+
+<section id="timeline">
+
+## 이동 한 번에 생기는 일
+
+| 구간 | 화면에 보이는 것 | 이유 |
+| --- | --- | --- |
+| 클릭 ~ 새 HTML 도착 | 이전 화면 | 문서가 아직 바뀌지 않았다 |
+| 문서 교체 ~ 번들 실행 | 이론상 이전 화면, 실제로는 흰 화면 | Chrome은 같은 출처 이동에서 첫 콘텐츠 페인트나 정해진 시간까지 화면 교체를 미룬다. 빈 껍데기에는 콘텐츠가 없다 |
+| 번들 실행 ~ React 첫 커밋 | 헤더, LNB, 본문 틀이 한꺼번에 등장 | 이 순간이 첫 콘텐츠 페인트다 |
+| API 응답 | 본문 내용이 채워진다 | 데이터 요청은 번들이 실행된 뒤에야 시작된다 |
+
+이론대로라면 빈 껍데기는 첫 콘텐츠 페인트가 아니니 Chrome이 이전 화면을 계속 붙잡아야 한다. 그런데 실제로는 흰 화면이 보였다. Chrome 글은 붙잡는 시간을 "정해진 시간"이라고만 하고 길이는 밝히지 않는다. 붙잡는 시간이 번들 실행보다 짧았던 걸까, 껍데기 안의 무언가가 첫 콘텐츠 페인트로 잡힌 걸까, View Transition이 붙잡기와 다르게 동작한 걸까? 이게 가장 먼저 확인할 것이다.
+
+</section>
+
+<section id="candidates">
+
+## 비교해 볼 방법
+
+| 방법 | 하는 일 | 예상 | 확인할 것 |
+| --- | --- | --- | --- |
+| 아무것도 안 함 | Chrome의 이전 화면 붙잡기에 맡긴다 | 번들이 빠르면 틈이 안 보이고, 느리면 흰 화면 | 붙잡는 시간의 한계, 껍데기 내용에 따른 차이 |
+| 교차 문서 View Transition | 이전 화면과 새 첫 화면을 겹쳐 전환한다 | 빈 껍데기가 새 화면으로 찍혀 흰색으로 바뀐다 | 붙잡기만 쓸 때보다 흰 화면이 길어지는지 짧아지는지 |
+| 번들 렌더 차단 | `<script blocking="render">`로 번들 실행 전까지 첫 렌더를 막는다 | 이전 화면이 번들 실행 때까지 남는다 | 첫 방문과 새로고침의 비용, React 첫 커밋 시점 |
+| 요소 기다리기 | `<link rel="expect" blocking="render">`로 지정한 요소가 DOM에 생길 때까지 첫 렌더를 막는다 | 파싱이 끝나면 풀려서, JS가 그리는 헤더는 못 기다릴 것 | 스크립트가 넣은 요소도 기다려 주는지 |
+| 서버가 주는 골격 HTML | HTML에 헤더·LNB 마크업과 핵심 CSS를 넣는다 | 첫 화면부터 헤더가 있어 틈이 본문에만 남는다 | 두 앱이 헤더를 어떻게 공유할지, React가 그 위에 그릴 때 깜빡이는지 |
+| 미리 그려 두기 | Speculation Rules로 다음 앱을 숨은 탭처럼 미리 실행한다 | 활성화 순간 완성된 화면이 뜬다 | 빗나간 예측의 비용, 로그인 확인·분석 이벤트 같은 부수 효과, 동시 개수 제한 |
+| 한 문서로 합치기 | Module Federation처럼 한 셸 안에서 다른 앱의 모듈을 불러온다 | 문서 이동이 없으니 헤더는 그대로다 | 브라우저 기능이 아니라 구조 선택이다. 비교 기준으로만 둔다 |
+
+미리 그려 두기는 기본적으로 같은 출처에서만 된다. 서브도메인처럼 사이트는 같고 출처가 다르면, 미리 그려질 페이지가 `Supports-Loading-Mode: credentialed-prerender` 헤더로 동의해야 한다. 교차 문서 View Transition은 같은 출처에서만 되고 두 페이지가 모두 `@view-transition { navigation: auto; }`로 동의해야 하며, 이동이 4초를 넘으면 건너뛴다.
+
+뒤로 가기는 따로 본다. 떠난 페이지가 bfcache에 들어가 있으면 틈 없이 돌아올 것이다. 롱폴링처럼 열려 있는 연결이 그걸 막는지도 함께 확인한다.
+
+</section>
+
+<section id="framework">
+
+## 프레임워크라는 사례
+
+Next.js는 이 문제를 Multi-Zones라는 이름으로 겪는다. 공식 문서는 zone 사이 이동을 이전 페이지의 자원을 내리고 새 페이지의 자원을 받는 hard navigation이라고 설명하고, 자주 함께 방문하는 페이지는 같은 zone에 두라고 권한다. 프레임워크도 틈을 없애기보다 경계를 줄이는 쪽을 택한 셈이다.
+
+- 서버 렌더링을 하는 zone이라면 첫 HTML에 헤더가 들어 있으니, 골격 HTML 방식과 같은 효과를 기본으로 얻을까?
+- zone 사이 링크는 `<Link>` 대신 `<a>`를 쓰라고 한다. 그러면 Next.js의 미리 받기 대신 Speculation Rules를 직접 써야 할까?
+- 경로마다 다른 SPA를 붙인 구조와 Multi-Zones는, 브라우저 입장에서 무엇이 다를까?
+
+</section>
+
+<section id="plan">
+
+## 실험 아이디어
+
+- 프록시 하나가 `/`와 `/todo`를 서로 다른 포트의 서버로 넘겨 같은 출처를 만든다. 각 서버는 빈 껍데기 HTML과, 헤더·LNB·본문을 JS로 그리는 작은 SPA를 내려준다.
+- 번들 응답 지연과 API 지연을 쿼리로 바꿀 수 있게 한다. 번들 지연은 0, 300, 1000, 3000ms로 나눈다.
+- CDP 화면 녹화로 프레임을 모으고, 프레임마다 헤더 영역이 보이는지와 화면 전체가 흰색인지 판정한다. 클릭부터 다음을 잰다.
+  - 헤더가 사라져 있던 시간
+  - 흰 화면이 보인 시간
+  - 새 화면이 완성되기까지의 시간
+- 이전 화면 붙잡기의 한계를 따로 잰다. 번들 지연을 늘려 가며 흰 화면이 처음 나타나는 지점을 찾고, 껍데기에 로딩 문구를 넣었을 때와 비교한다.
+- 위 표의 방법마다 같은 측정을 반복한다. 렌더 차단과 골격 HTML은 첫 방문과 새로고침의 첫 화면 시간도 함께 잰다.
+- 실제 Chrome 창에서도 녹화해, 눈으로 보이는 틈을 남긴다.
+
+</section>
+
+<section id="sources">
+
+## 근거와 출처
+
+- [Chrome for Developers · Paint Holding ↗](https://developer.chrome.com/blog/paint-holding): 같은 출처 이동에서 첫 콘텐츠 페인트나 정해진 시간까지 화면 교체를 미룬다. 시간의 길이는 나오지 않는다.
+- [Chrome for Developers · Cross-document view transitions ↗](https://developer.chrome.com/docs/web-platform/view-transitions/cross-document): 같은 출처, 두 페이지 모두 동의, 4초를 넘으면 `TimeoutError`로 건너뜀. `rel="expect"`는 요소가 DOM에 있는지를 볼 뿐 내용이 로드됐는지는 보지 않는다.
+- [MDN · rel 속성 ↗](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/rel): `expect`는 `blocking="render"`와 함께 쓸 때만 렌더를 막는다.
+- [MDN · Using the View Transition API ↗](https://developer.mozilla.org/en-US/docs/Web/API/View_Transition_API/Using): 렌더 차단 요소는 `<head>`에 있어야 한다.
+- [Chrome for Developers · Prerender pages ↗](https://developer.chrome.com/docs/web-platform/prerender-pages): 기본은 같은 출처, 같은 사이트의 다른 출처는 `Supports-Loading-Mode: credentialed-prerender` 헤더 필요. 데스크톱의 moderate 설정은 동시에 2개까지.
+- [Next.js · Multi-zones ↗](https://nextjs.org/docs/app/guides/multi-zones): zone 사이 이동은 hard navigation. 자주 함께 방문하는 페이지는 같은 zone에 두라고 권한다.
+
+</section>
